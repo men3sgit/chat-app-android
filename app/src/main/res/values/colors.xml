@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--setup color-->
+<resources>
+    <color name="primary_text">#151414</color>
+    <color name="secondary_text">#6E6C6C</color>
+    <color name="input_background">#BFBFBF</color>
+    <color name="white">#fff</color>
+    <color name="sign_in">#191818</color>
+    <color name="background_image">#DAD7D7</color>
+</resources>
