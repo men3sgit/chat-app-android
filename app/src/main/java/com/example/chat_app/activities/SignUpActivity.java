@@ -20,6 +20,7 @@ import com.example.chat_app.R;
 import com.example.chat_app.databinding.ActivitySignUpBinding;
 import com.example.chat_app.utilities.Constants;
 import com.example.chat_app.utilities.PreferenceManager;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.io.ByteArrayOutputStream;
