@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">chat_app</string>
+    <string name="app_name">TikTalk</string>
     <string name="welcome_back">Welcome Back</string>
     <string name="sign_up_to_continue">Sign up to continue</string>
     <string name="email">Email</string>
