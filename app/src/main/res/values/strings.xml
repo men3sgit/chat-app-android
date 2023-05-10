@@ -11,4 +11,5 @@
     <string name="name">Name</string>
     <string name="male">Male</string>
     <string name="female">Female</string>
+    <string name="select_user">Select User</string>
 </resources>
