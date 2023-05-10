@@ -8,6 +8,7 @@
     android:overScrollMode="never"
     android:padding="@dimen/_24sdp"
     android:scrollbars="none"
+    android:background="@drawable/background_gradients"
     tools:context=".activities.SignInActivity">
 
     <LinearLayout
@@ -19,10 +20,10 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/_48sdp"
+            android:layout_marginTop="@dimen/_72sdp"
             android:text="@string/welcome_back"
             android:textColor="@color/primary_text"
-            android:textSize="@dimen/_18ssp"
+            android:textSize="@dimen/_24ssp"
             android:textStyle="bold" />
 
         <TextView
@@ -31,7 +32,7 @@
             android:layout_marginTop="@dimen/_4sdp"
             android:text="@string/sign_up_to_continue"
             android:textColor="@color/secondary_text"
-            android:textSize="@dimen/_12ssp"
+            android:textSize="@dimen/_16ssp"
             android:textStyle="bold" />
 
         <EditText
@@ -74,10 +75,10 @@
                 android:layout_height="@dimen/_50sdp"
                 android:text="@string/sign_in"
                 android:textColor="@color/white"
-                android:textSize="@dimen/_13ssp"
+                android:textSize="@dimen/_16ssp"
                 android:textStyle="bold"
                 app:cornerRadius="@dimen/_8sdp"
-                app:backgroundTint="@color/sign_in"/>
+                app:backgroundTint="@color/button_login"/>
             
             <ProgressBar
                 android:id="@+id/progressBar"
