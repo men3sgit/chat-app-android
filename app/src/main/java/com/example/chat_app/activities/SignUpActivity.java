@@ -70,10 +70,10 @@ public class SignUpActivity extends AppCompatActivity {
                             new DatePickerDialog.OnDateSetListener() {
                                 @Override
                                 public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                                    month++;
+
                                     // Do something with the selected date
                                     String date = "" + (dayOfMonth < 10 ? "0" + dayOfMonth : dayOfMonth) + "/"
-                                            + (month < 10 ? "0" + month : month) + "/" + year;
+                                            + (++month < 10 ? "0" + month : month) + "/" + year;
                                     binding.buttonBirthDate.setText(date);
                                 }
                             }
@@ -97,12 +97,16 @@ public class SignUpActivity extends AppCompatActivity {
         user.put(Constants.KEY_EMAIL, binding.inputEmail.getText().toString());
         user.put(Constants.KEY_PASSWORD, binding.inputPassword.getText().toString());
         user.put(Constants.KEY_IMAGE, encodedImage);
+        user.put(Constants.KEY_BIRTH_DATE,binding.buttonBirthDate.getText().toString());
+        user.put(Constants.KEY_GENDER,getGender());
         database.collection(Constants.KEY_COLLECTION_USERS).add(user).addOnSuccessListener(documentReference ->{
             loading(false);
             preferenceManager.putBoolean(Constants.KEY_IS_SIGNED_IN, true);
             preferenceManager.putString(Constants.KEY_USER_ID, documentReference.getId());
             preferenceManager.putString(Constants.KEY_NAME, binding.inputName.getText().toString());
             preferenceManager.putString(Constants.KEY_IMAGE, encodedImage);
+            preferenceManager.putString(Constants.KEY_BIRTH_DATE,binding.buttonBirthDate.getText().toString());
+            preferenceManager.putString(Constants.KEY_GENDER,getGender());
             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
@@ -110,6 +114,10 @@ public class SignUpActivity extends AppCompatActivity {
             loading(false);
             showToast(exception.getMessage());
         });
+    }
+    private String getGender(){
+        if(binding.radioMale.isChecked()) return binding.radioMale.getText().toString();
+        return binding.radioFemale.getText().toString();
     }
 
     private String encodeImage(Bitmap bitmap){
@@ -174,6 +182,10 @@ public class SignUpActivity extends AppCompatActivity {
         }
         else if(!binding.inputPassword.getText().toString().equals(binding.inputConfirmPassword.getText().toString())){
             showToast("Password and confirm password must be same");
+            return false;
+        }
+        else if(binding.buttonBirthDate.getText().toString().equalsIgnoreCase("birth date")){
+            showToast("Enter Birth Date");
             return false;
         }
         return true;

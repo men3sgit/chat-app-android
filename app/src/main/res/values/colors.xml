@@ -3,9 +3,9 @@
 <resources>
     <color name="primary_text">#151414</color>
     <color name="secondary_text">#6E6C6C</color>
-    <color name="input_background">#ECECEC</color>
+    <color name="input_background">#F3ECEC</color>
     <color name="white">#fff</color>
-    <color name="button_login">#B3E8F7</color>
+    <color name="button_login">#F85991</color>
     <color name="sign_in">#191818</color>
     <color name="background_image">#DAD7D7</color>
     <color name="pink">#f3a0d7</color>
