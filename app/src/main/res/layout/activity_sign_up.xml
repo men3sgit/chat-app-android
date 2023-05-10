@@ -105,6 +105,44 @@
             android:paddingEnd="@dimen/_16sdp"
             android:textColor="@color/primary_text"
             android:textSize="@dimen/_13ssp"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="@dimen/_12sdp"
+            android:gravity="center">
+            <Button
+                android:id="@+id/buttonBirthDate"
+                android:layout_width="@dimen/_128sdp"
+                android:layout_height="@dimen/_40sdp"
+                android:text="Birth Date"
+                app:cornerRadius="@dimen/_8sdp"
+                android:textSize="@dimen/_12ssp"
+                android:textColor="@color/primary_text"
+                android:backgroundTint="@color/input_background"/>
+            <RadioGroup
+                android:layout_width="match_parent"
+                android:orientation="horizontal"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_16sdp">
+                <RadioButton
+                    android:id="@+id/radioMale"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/male"
+                    android:textSize="@dimen/_12ssp"
+                    android:checked="true"/>
+                <RadioButton
+                    android:id="@+id/radioFemale"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/female"
+                    android:textSize="@dimen/_12ssp"
+                    android:layout_marginStart="@dimen/_8sdp"/>
+            </RadioGroup>
+
+
+        </LinearLayout>
 
         <FrameLayout
             android:layout_width="match_parent"

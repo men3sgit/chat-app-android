@@ -9,4 +9,6 @@
     <string name="add_image">Add image</string>
     <string name="sign_up">Sign Up</string>
     <string name="name">Name</string>
+    <string name="male">Male</string>
+    <string name="female">Female</string>
 </resources>
