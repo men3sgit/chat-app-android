@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
-    android:background="@color/primary_text"
+    android:background="@drawable/background_gradients"
     tools:context=".activities.MainActivity">
 
     <com.makeramen.roundedimageview.RoundedImageView
@@ -15,11 +15,11 @@
         android:layout_marginStart="@dimen/_16sdp"
         android:layout_marginLeft="@dimen/_16sdp"
         android:layout_marginTop="@dimen/_12sdp"
-        android:background="@drawable/background_icon"
+        android:background="@drawable/background_button"
         android:scaleType="centerCrop"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:riv_corner_radius="@dimen/_8sdp"/>
+        app:riv_corner_radius="@dimen/_12sdp"/>
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/imageSignOut"
@@ -28,7 +28,7 @@
         android:layout_marginTop="@dimen/_12sdp"
         android:layout_marginEnd="@dimen/_16sdp"
         android:layout_marginRight="@dimen/_16sdp"
-        android:background="@drawable/background_icon"
+        android:background="@drawable/background_button"
         android:padding="@dimen/_6sdp"
         android:src="@drawable/ic_logout"
         app:layout_constraintEnd_toEndOf="parent"
@@ -44,12 +44,37 @@
         android:ellipsize="end"
         android:gravity="center"
         android:maxLines="1"
-        android:textColor="@color/white"
-        android:textSize="@dimen/_14ssp"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_20ssp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@id/imageProfile"
         app:layout_constraintEnd_toStartOf="@id/imageSignOut"
         app:layout_constraintStart_toEndOf="@id/imageProfile"
         app:layout_constraintTop_toTopOf="@id/imageProfile"/>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="@dimen/_16sdp"
+        android:background="@drawable/background_content_bottom"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/imageProfile">
+
+    </FrameLayout>
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/addNewChat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/_24sdp"
+        android:layout_marginRight="@dimen/_26sdp"
+        android:layout_marginBottom="@dimen/_26sdp"
+        android:contentDescription="@string/app_name"
+        android:src="@drawable/ic_add"
+        android:backgroundTint="@color/background_image"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:tint="@color/black"
+        />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

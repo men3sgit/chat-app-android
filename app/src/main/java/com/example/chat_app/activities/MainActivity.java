@@ -36,7 +36,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setListeners(){
+
         binding.imageSignOut.setOnClickListener(v -> signOut());
+        binding.addNewChat.setOnClickListener(v ->
+                startActivity(new Intent(getApplicationContext(), UsersActivity.class)));
     }
 
     private void loadUserDetails(){
@@ -57,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
     private void updateToken(String token){
         FirebaseFirestore database = FirebaseFirestore.getInstance();
         DocumentReference documentReference = database.collection(Constants.KEY_COLLECTION_USERS).document(preferenceManager.getString(Constants.KEY_USER_ID));
-        documentReference.update(Constants.KEY_FCM_TOKEN, token).addOnSuccessListener(unused -> showToast("Token update successfully"))
+        documentReference.update(Constants.KEY_FCM_TOKEN, token)
                 .addOnFailureListener(e -> showToast("Unable to update token"));
     }
 
