@@ -5,6 +5,7 @@ import androidx.activity.result.contract.ActivityResultContract;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -14,6 +15,7 @@ import android.provider.MediaStore;
 import android.util.Base64;
 import android.util.Patterns;
 import android.view.View;
+import android.widget.DatePicker;
 import android.widget.Toast;
 
 import com.example.chat_app.R;
@@ -26,10 +28,11 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.util.Calendar;
 import java.util.HashMap;
 
 public class SignUpActivity extends AppCompatActivity {
-
+    private DatePickerDialog datePickerDialog;
     private ActivitySignUpBinding binding;
     private PreferenceManager preferenceManager;
     private String encodedImage;
@@ -54,6 +57,32 @@ public class SignUpActivity extends AppCompatActivity {
             intent.addFlags(Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
             pickImage.launch(intent);
         });
+
+        binding.buttonBirthDate.setOnClickListener(view -> {
+                    final Calendar calendar = Calendar.getInstance();
+                    // default date
+                    int year = calendar.get(Calendar.YEAR);
+                    int month = calendar.get(Calendar.MONTH);
+                    int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
+
+                    // Create a new instance of DatePickerDialog and return it
+                    datePickerDialog = new DatePickerDialog(SignUpActivity.this,
+                            new DatePickerDialog.OnDateSetListener() {
+                                @Override
+                                public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                                    month++;
+                                    // Do something with the selected date
+                                    String date = "" + (dayOfMonth < 10 ? "0" + dayOfMonth : dayOfMonth) + "/"
+                                            + (month < 10 ? "0" + month : month) + "/" + year;
+                                    binding.buttonBirthDate.setText(date);
+                                }
+                            }
+                            , year, month, dayOfMonth);
+
+                    // Show the dialog
+                    datePickerDialog.show();
+                }
+        );
     }
 
     private void showToast(String message){
