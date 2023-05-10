@@ -8,6 +8,7 @@
     android:overScrollMode="never"
     android:padding="@dimen/_24sdp"
     android:scrollbars="none"
+    android:background="@drawable/background_gradients"
     tools:context=".activities.SignUpActivity">
 
     <LinearLayout
@@ -22,19 +23,19 @@
             android:layout_marginTop="@dimen/_16sdp"
             android:text="@string/create_new_account"
             android:textColor="@color/primary_text"
-            android:textSize="@dimen/_18ssp"
+            android:textSize="@dimen/_20ssp"
             android:textStyle="bold" />
 
         <FrameLayout
             android:id="@+id/layoutImage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/_20sdp">
+            android:layout_marginTop="@dimen/_16sdp">
 
             <com.makeramen.roundedimageview.RoundedImageView
                 android:id="@+id/imageProfile"
-                android:layout_width="@dimen/_80sdp"
-                android:layout_height="@dimen/_80sdp"
+                android:layout_width="@dimen/_76sdp"
+                android:layout_height="@dimen/_76sdp"
                 android:background="@drawable/background_image"
                 android:scaleType="centerCrop"
                 app:riv_oval="true" />
@@ -53,7 +54,7 @@
             android:id="@+id/inputName"
             android:layout_width="match_parent"
             android:layout_height="@dimen/_45sdp"
-            android:layout_marginTop="@dimen/_32sdp"
+            android:layout_marginTop="@dimen/_16sdp"
             android:background="@drawable/background_input"
             android:hint="@string/name"
             android:imeOptions="actionNext"
@@ -156,10 +157,10 @@
                 android:layout_height="@dimen/_50sdp"
                 android:text="@string/sign_up"
                 android:textColor="@color/white"
-                android:textSize="@dimen/_13ssp"
+                android:textSize="@dimen/_16ssp"
                 android:textStyle="bold"
                 app:cornerRadius="@dimen/_12sdp"
-                app:backgroundTint="@color/sign_in"/>
+                app:backgroundTint="@color/button_login"/>
             
             <ProgressBar
                 android:id="@+id/progressBar"
@@ -176,7 +177,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/sign_in"
-            android:textSize="@dimen/_13ssp"
+            android:textSize="@dimen/_16ssp"
             android:textStyle="bold"
             android:layout_marginTop="@dimen/_16sdp"
             android:textColor="@color/primary_text"
