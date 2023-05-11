@@ -78,34 +78,102 @@
             android:paddingEnd="@dimen/_16sdp"
             android:textColor="@color/primary_text"
             android:textSize="@dimen/_13ssp"/>
-        <EditText
-            android:id="@+id/inputPassword"
+<!--        <EditText-->
+<!--            android:id="@+id/inputPassword"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="@dimen/_45sdp"-->
+<!--            android:layout_marginTop="@dimen/_16sdp"-->
+<!--            android:background="@drawable/background_input"-->
+<!--            android:hint="@string/password"-->
+<!--            android:imeOptions="actionNext"-->
+<!--            android:importantForAutofill="no"-->
+<!--            android:inputType="textPassword"-->
+<!--            android:paddingStart="@dimen/_16sdp"-->
+<!--            android:paddingEnd="@dimen/_16sdp"-->
+<!--            android:textColor="@color/primary_text"-->
+<!--            android:textSize="@dimen/_13ssp"/>-->
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="@dimen/_45sdp"
-            android:layout_marginTop="@dimen/_16sdp"
-            android:background="@drawable/background_input"
-            android:hint="@string/password"
-            android:imeOptions="actionNext"
-            android:importantForAutofill="no"
-            android:inputType="textPassword"
-            android:paddingStart="@dimen/_16sdp"
-            android:paddingEnd="@dimen/_16sdp"
-            android:textColor="@color/primary_text"
-            android:textSize="@dimen/_13ssp"/>
-        <EditText
-            android:id="@+id/inputConfirmPassword"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_16sdp">
+            <EditText
+                android:id="@+id/inputPassword"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_45sdp"
+                android:background="@drawable/background_input"
+                android:hint="@string/password"
+                android:imeOptions="actionDone"
+                android:importantForAutofill="no"
+                android:inputType="textPassword"
+                android:paddingStart="@dimen/_16sdp"
+                android:paddingEnd="@dimen/_40sdp"
+                android:textColor="@color/primary_text"
+
+                android:textSize="@dimen/_13ssp"/>
+            <TextView
+                android:id="@+id/textShowPassword"
+                android:layout_width="@dimen/_20sdp"
+                android:layout_height="@dimen/_20sdp"
+                android:background="@drawable/ic_show_password"
+                android:layout_gravity="right|center"
+                android:layout_marginEnd="@dimen/_16sdp"/>
+            <TextView
+                android:id="@+id/textHidePassword"
+                android:layout_width="@dimen/_20sdp"
+                android:layout_height="@dimen/_20sdp"
+                android:background="@drawable/ic_hide_password"
+                android:layout_gravity="right|center"
+                android:layout_marginEnd="@dimen/_16sdp"
+                android:visibility="gone"/>
+        </FrameLayout>
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="@dimen/_45sdp"
-            android:layout_marginTop="@dimen/_16sdp"
-            android:background="@drawable/background_input"
-            android:hint="Confirm Password"
-            android:imeOptions="actionDone"
-            android:importantForAutofill="no"
-            android:inputType="textPassword"
-            android:paddingStart="@dimen/_16sdp"
-            android:paddingEnd="@dimen/_16sdp"
-            android:textColor="@color/primary_text"
-            android:textSize="@dimen/_13ssp"/>
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_16sdp">
+            <EditText
+                android:id="@+id/inputConfirmPassword"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_45sdp"
+                android:background="@drawable/background_input"
+                android:hint="Confirm Password"
+                android:imeOptions="actionDone"
+                android:importantForAutofill="no"
+                android:inputType="textPassword"
+                android:paddingStart="@dimen/_16sdp"
+                android:paddingEnd="@dimen/_40sdp"
+                android:textColor="@color/primary_text"
+
+                android:textSize="@dimen/_13ssp"/>
+            <TextView
+                android:id="@+id/textShowConfirmPassword"
+                android:layout_width="@dimen/_20sdp"
+                android:layout_height="@dimen/_20sdp"
+                android:background="@drawable/ic_show_password"
+                android:layout_gravity="right|center"
+                android:layout_marginEnd="@dimen/_16sdp"/>
+            <TextView
+                android:id="@+id/textHideConfirmPassword"
+                android:layout_width="@dimen/_20sdp"
+                android:layout_height="@dimen/_20sdp"
+                android:background="@drawable/ic_hide_password"
+                android:layout_gravity="right|center"
+                android:layout_marginEnd="@dimen/_16sdp"
+                android:visibility="gone"/>
+        </FrameLayout>
+<!--        <EditText-->
+<!--            android:id="@+id/inputConfirmPassword"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="@dimen/_45sdp"-->
+<!--            android:layout_marginTop="@dimen/_16sdp"-->
+<!--            android:background="@drawable/background_input"-->
+<!--            android:hint="Confirm Password"-->
+<!--            android:imeOptions="actionDone"-->
+<!--            android:importantForAutofill="no"-->
+<!--            android:inputType="textPassword"-->
+<!--            android:paddingStart="@dimen/_16sdp"-->
+<!--            android:paddingEnd="@dimen/_16sdp"-->
+<!--            android:textColor="@color/primary_text"-->
+<!--            android:textSize="@dimen/_13ssp"/>-->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
