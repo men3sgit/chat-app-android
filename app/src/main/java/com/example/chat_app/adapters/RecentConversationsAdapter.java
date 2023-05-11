@@ -41,6 +41,7 @@ public class RecentConversationsAdapter extends RecyclerView.Adapter<RecentConve
         return chatMessages.size();
     }
 
+    //Class ConversionViewHolder
     class ConversionViewHolder extends RecyclerView.ViewHolder{
         ItemContainerRecentConversionBinding binding;
 
@@ -63,6 +64,7 @@ public class RecentConversationsAdapter extends RecyclerView.Adapter<RecentConve
         }
     }
 
+    //Chuyển đổi String decodedImage thành Bitmap
     private Bitmap getConversionImage(String decodedImage){
         byte[] bytes = Base64.decode(decodedImage, Base64.DEFAULT);
         return BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
