@@ -54,7 +54,8 @@ public class UsersActivity extends AppCompatActivity {
                     user.token = queryDocumentSnapshot.getString(Constants.KEY_FCM_TOKEN);
                     users.add(user);
                 }
-                if(users.size() > 0){
+                //MT list
+                if(users.size() >= 0){
                     UsersAdapter usersAdapter = new UsersAdapter(users);
                     binding.usersRecyclerView.setAdapter(usersAdapter);
                     binding.usersRecyclerView.setVisibility(View.VISIBLE);
