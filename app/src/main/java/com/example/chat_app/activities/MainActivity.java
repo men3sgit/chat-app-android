@@ -1,7 +1,7 @@
 package com.example.chat_app.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -10,7 +10,6 @@ import android.util.Base64;
 import android.view.View;
 import android.widget.Toast;
 
-import com.example.chat_app.R;
 import com.example.chat_app.adapters.RecentConversationsAdapter;
 import com.example.chat_app.databinding.ActivityMainBinding;
 import com.example.chat_app.listeners.ConversionListener;
@@ -20,7 +19,6 @@ import com.example.chat_app.utilities.Constants;
 import com.example.chat_app.utilities.PreferenceManager;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -28,11 +26,10 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements ConversionListener {
+public class MainActivity extends BaseActivity implements ConversionListener {
     private ActivityMainBinding binding;
     private PreferenceManager preferenceManager;
     private List<ChatMessage> conversations;
@@ -86,6 +83,7 @@ public class MainActivity extends AppCompatActivity implements ConversionListene
                 .addSnapshotListener(eventListener);
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private final EventListener<QuerySnapshot> eventListener = ((value, error) ->{
         if(error != null){
             return;
@@ -109,7 +107,7 @@ public class MainActivity extends AppCompatActivity implements ConversionListene
                         chatMessage.conversionId = documentChange.getDocument().getString(Constants.KEY_SENDER_ID);
                     }
                     chatMessage.message = documentChange.getDocument().getString(Constants.KEY_LAST_MESSAGE);
-                    chatMessage.dataObject = documentChange.getDocument().getDate(Constants.KEY_TIMESTAMP);
+                    chatMessage.dateObject = documentChange.getDocument().getDate(Constants.KEY_TIMESTAMP);
                     conversations.add(chatMessage);
                 }
                 else if(documentChange.getType() == DocumentChange.Type.MODIFIED){
@@ -118,13 +116,13 @@ public class MainActivity extends AppCompatActivity implements ConversionListene
                         String receiverId = documentChange.getDocument().getString(Constants.KEY_RECEIVER_ID);
                         if(conversations.get(i).senderId.equals(senderId) && conversations.get(i).receiverId.equals(receiverId)){
                             conversations.get(i).message = documentChange.getDocument().getString(Constants.KEY_LAST_MESSAGE);
-                            conversations.get(i).dataObject = documentChange.getDocument().getDate(Constants.KEY_TIMESTAMP);
+                            conversations.get(i).dateObject = documentChange.getDocument().getDate(Constants.KEY_TIMESTAMP);
                             break;
                         }
                     }
                 }
             }
-            Collections.sort(conversations, (obj1, obj2) -> obj2.dataObject.compareTo(obj1.dataObject));
+            conversations.sort((obj1, obj2) -> obj2.dateObject.compareTo(obj1.dateObject));
             conversationsAdapter.notifyDataSetChanged();
             binding.conversationRecyclerView.smoothScrollToPosition(0);
             binding.conversationRecyclerView.setVisibility(View.VISIBLE);

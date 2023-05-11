@@ -11,4 +11,5 @@
     <color name="background_image">#DAD7D7</color>
     <color name="pink">#f3a0d7</color>
     <color name="error">#FF0000</color>
+    <color name="online">#008000</color>
 </resources>

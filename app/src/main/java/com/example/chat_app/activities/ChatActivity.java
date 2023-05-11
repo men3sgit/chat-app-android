@@ -1,14 +1,13 @@
 package com.example.chat_app.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Base64;
 import android.view.View;
 
-import com.example.chat_app.R;
 import com.example.chat_app.adapters.ChatAdapter;
 import com.example.chat_app.databinding.ActivityChatBinding;
 import com.example.chat_app.models.ChatMessage;
@@ -25,13 +24,14 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
-public class ChatActivity extends AppCompatActivity {
+public class ChatActivity extends BaseActivity {
 
     private ActivityChatBinding binding;
     private User receiverUser;
@@ -40,6 +40,7 @@ public class ChatActivity extends AppCompatActivity {
     private PreferenceManager preferenceManager;
     private FirebaseFirestore database;
     private String conversionId = null;
+    private Boolean isReceiverAvailable = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,6 +85,26 @@ public class ChatActivity extends AppCompatActivity {
         binding.inputMessage.setText(null);
     }
 
+    private void listenerAvailabilityOfReceiver(){
+        database.collection(Constants.KEY_COLLECTION_USERS).document(receiverUser.id)
+                .addSnapshotListener(ChatActivity.this, (value, error) -> {
+                    if(error != null) {
+                        return;
+                    }
+                    if(value != null){
+                        if(value.getLong(Constants.KEY_AVAILABILITY) != null){
+                            int availability = Objects.requireNonNull(value.getLong(Constants.KEY_AVAILABILITY)).intValue();
+                            System.out.println(availability);
+                            isReceiverAvailable = (availability == 1);
+                        }
+                    }
+                    if(isReceiverAvailable){
+                        binding.textAvailability.setVisibility(View.VISIBLE);
+                    }
+                    else binding.textAvailability.setVisibility(View.GONE);
+                });
+    }
+
     private void listenMessage(){
         database.collection(Constants.KEY_COLLECTION_CHAT).whereEqualTo(Constants.KEY_SENDER_ID, preferenceManager.getString(Constants.KEY_USER_ID))
                 .whereEqualTo(Constants.KEY_RECEIVER_ID, receiverUser.id)
@@ -93,6 +114,7 @@ public class ChatActivity extends AppCompatActivity {
                 .addSnapshotListener(eventListener);
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private final EventListener<QuerySnapshot> eventListener = (value, error) -> {
         if(error != null) return;
         if(value != null){
@@ -104,11 +126,11 @@ public class ChatActivity extends AppCompatActivity {
                     chatMessage.receiverId = documentChange.getDocument().getString(Constants.KEY_RECEIVER_ID);
                     chatMessage.message = documentChange.getDocument().getString(Constants.KEY_MESSAGE);
                     chatMessage.dateTime = getReadableDateTime(documentChange.getDocument().getDate(Constants.KEY_TIMESTAMP));
-                    chatMessage.dataObject = documentChange.getDocument().getDate(Constants.KEY_TIMESTAMP);
+                    chatMessage.dateObject = documentChange.getDocument().getDate(Constants.KEY_TIMESTAMP);
                     chatMessages.add(chatMessage);
                 }
             }
-            Collections.sort(chatMessages, (obj1, obj2) -> obj1.dataObject.compareTo(obj2.dataObject));
+            chatMessages.sort(Comparator.comparing(obj -> obj.dateObject));
             if(count == 0){
                 chatAdapter.notifyDataSetChanged();
             }
@@ -119,7 +141,7 @@ public class ChatActivity extends AppCompatActivity {
             binding.chatRecyclerView.setVisibility(View.VISIBLE);
         }
         binding.progressBar.setVisibility(View.GONE);
-        if(conversionId!=null){
+        if(conversionId == null){
             checkForConversion();
         }
     };
@@ -139,7 +161,7 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private String getReadableDateTime(Date date){
-        return new SimpleDateFormat("hh:mm a - dd MMMM yyyy", Locale.getDefault()).format(date);
+        return new SimpleDateFormat("HH:mm:ss dd/MM/yyyy", Locale.getDefault()).format(date);
     }
 
     private void addConversion(HashMap<String, Object> conversion){
@@ -175,4 +197,11 @@ public class ChatActivity extends AppCompatActivity {
             conversionId = documentSnapshot.getId();
         }
     };
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        listenerAvailabilityOfReceiver();
+
+    }
 }
