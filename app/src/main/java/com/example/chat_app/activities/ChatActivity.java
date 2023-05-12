@@ -2,16 +2,27 @@ package com.example.chat_app.activities;
 
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Base64;
+import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.chat_app.adapters.ChatAdapter;
 import com.example.chat_app.databinding.ActivityChatBinding;
 import com.example.chat_app.models.ChatMessage;
 import com.example.chat_app.models.User;
+import com.example.chat_app.network.ApiClient;
+import com.example.chat_app.network.ApiService;
 import com.example.chat_app.utilities.Constants;
 import com.example.chat_app.utilities.PreferenceManager;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -22,6 +33,11 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -30,6 +46,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class ChatActivity extends BaseActivity {
 
@@ -85,6 +105,10 @@ public class ChatActivity extends BaseActivity {
         binding.inputMessage.setText(null);
     }
 
+    private void showToast(String message) {
+        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+    }
+
     private void listenerAvailabilityOfReceiver(){
         database.collection(Constants.KEY_COLLECTION_USERS).document(receiverUser.id)
                 .addSnapshotListener(ChatActivity.this, (value, error) -> {
@@ -97,11 +121,13 @@ public class ChatActivity extends BaseActivity {
                             System.out.println(availability);
                             isReceiverAvailable = (availability == 1);
                         }
+                        receiverUser.token = value.getString(Constants.KEY_FCM_TOKEN);
                     }
                     if(isReceiverAvailable){
                         binding.textAvailability.setVisibility(View.VISIBLE);
                     }
                     else binding.textAvailability.setVisibility(View.GONE);
+
                 });
     }
 
@@ -155,10 +181,83 @@ public class ChatActivity extends BaseActivity {
         binding.textName.setText(receiverUser.name);
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private void setListeners(){
         binding.imageBack.setOnClickListener(view -> onBackPressed());
+        binding.inputMessage.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    // Xử lý sự kiện khi người dùng chọn vào EditText
+                    binding.layoutImage.setVisibility(View.GONE);
+                    binding.layoutMic.setVisibility(View.GONE);
+                    binding.layoutExtend.setVisibility(View.VISIBLE);
+
+                } else {
+                    // Xử lý sự kiện khi người dùng chuyển sang EditText khác
+                }
+            }
+        });
+
+        //ẩn bàn phím khi ấn ngoài inputmessage
+        binding.chatRecyclerView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                // Ẩn bàn phím ảo
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(binding.inputMessage.getWindowToken(), 0);
+
+                // Mất focus của EditText
+                binding.inputMessage.clearFocus();
+
+                return false;
+            }
+        });
+
+        //gửi tin nhắn bằng ấn done từ bàn phím
+        binding.inputMessage.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    // Xử lý sự kiện khi người dùng nhấn nút Done trên bàn phím ảo.
+                    sendMessage();
+                    return true;
+                }
+                return false;
+            }
+        });
+
+        //Ẩn tiện ích khi soạn thảo văn bản
+        binding.inputMessage.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // Không cần xử lý
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // Xử lý sự kiện khi người dùng nhập liệu và thay đổi text
+                binding.layoutImage.setVisibility(View.GONE);
+                binding.layoutMic.setVisibility(View.GONE);
+                binding.layoutExtend.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                // Không cần xử lý
+            }
+        });
+
+
+        binding.layoutExtend.setOnClickListener(view -> {
+            binding.layoutExtend.setVisibility(View.INVISIBLE);
+            binding.layoutMic.setVisibility(View.VISIBLE);
+            binding.layoutImage.setVisibility(View.VISIBLE);
+        });
         binding.layoutSend.setOnClickListener(view -> sendMessage());
     }
+
+
 
     private String getReadableDateTime(Date date){
         return new SimpleDateFormat("HH:mm:ss dd/MM/yyyy", Locale.getDefault()).format(date);
