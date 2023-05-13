@@ -1,14 +1,19 @@
 package com.example.chat_app.activities;
 
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Base64;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -17,12 +22,14 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+
+import com.example.chat_app.R;
 import com.example.chat_app.adapters.ChatAdapter;
 import com.example.chat_app.databinding.ActivityChatBinding;
 import com.example.chat_app.models.ChatMessage;
 import com.example.chat_app.models.User;
-import com.example.chat_app.network.ApiClient;
-import com.example.chat_app.network.ApiService;
 import com.example.chat_app.utilities.Constants;
 import com.example.chat_app.utilities.PreferenceManager;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -32,11 +39,12 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.MultiplePermissionsReport;
+import com.karumi.dexter.PermissionToken;
+import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -47,9 +55,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import gun0912.tedbottompicker.TedBottomPicker;
+import gun0912.tedbottompicker.TedBottomSheetDialogFragment;
 
 public class ChatActivity extends BaseActivity {
 
@@ -61,6 +68,7 @@ public class ChatActivity extends BaseActivity {
     private FirebaseFirestore database;
     private String conversionId = null;
     private Boolean isReceiverAvailable = false;
+    private static final int IMAGE_PICKER_REQUEST = 1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -199,6 +207,7 @@ public class ChatActivity extends BaseActivity {
             }
         });
 
+
         //ẩn bàn phím khi ấn ngoài inputmessage
         binding.chatRecyclerView.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -255,6 +264,10 @@ public class ChatActivity extends BaseActivity {
             binding.layoutImage.setVisibility(View.VISIBLE);
         });
         binding.layoutSend.setOnClickListener(view -> sendMessage());
+
+        binding.layoutImage.setOnClickListener(view -> {
+            requestPermission();
+        });
     }
 
 
@@ -302,5 +315,46 @@ public class ChatActivity extends BaseActivity {
         super.onResume();
         listenerAvailabilityOfReceiver();
 
+    }
+
+    private void requestPermission(){
+        Dexter.withActivity(this)
+                .withPermissions(
+                        Manifest.permission.READ_EXTERNAL_STORAGE,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                        Manifest.permission.CAMERA
+                )
+                .withListener(new MultiplePermissionsListener() {
+                    @Override
+                    public void onPermissionsChecked(MultiplePermissionsReport report) {
+                        if (report.areAllPermissionsGranted()) {
+                            openBottomPicker();
+                        } else {
+                            Toast.makeText(ChatActivity.this, "Bạn chưa cấp quyền truy cập.", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
+                        token.continuePermissionRequest();
+                    }
+                })
+                .check();
+    }
+
+    private void openBottomPicker(){
+        List<Uri> selectedUriList = new ArrayList<>();
+        TedBottomPicker.with(ChatActivity.this)
+                .setPeekHeight(1600)
+                .showTitle(false)
+                .setCompleteButtonText("Done")
+                .setEmptySelectionText("No Select")
+                .setSelectedUriList(selectedUriList)
+                .showMultiImage(new TedBottomSheetDialogFragment.OnMultiImageSelectedListener() {
+                    @Override
+                    public void onImagesSelected(List<Uri> uriList) {
+
+                    }
+                });
     }
 }
