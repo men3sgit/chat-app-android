@@ -1,10 +1,12 @@
 package com.example.chat_app.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Toast;
 
 import com.example.chat_app.adapters.UsersAdapter;
 import com.example.chat_app.databinding.ActivityUsersBinding;
@@ -19,9 +21,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UsersActivity extends BaseActivity implements UserListener {
-
     private ActivityUsersBinding binding;
     private PreferenceManager preferenceManager;
+    private List<User> users;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,24 +31,72 @@ public class UsersActivity extends BaseActivity implements UserListener {
         binding = ActivityUsersBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         preferenceManager = new PreferenceManager(getApplicationContext());
+        // avoid require input from user's keyboard
+        binding.searchView.clearFocus();
         setListeners();
         getUsers();
     }
 
-    private void setListeners(){
+    private void setListeners() {
         binding.imageBack.setOnClickListener(v -> onBackPressed());
+        setSearchViewListener();
     }
 
-    private void getUsers(){
+    private void setSearchViewListener() {
+        binding.searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                filterList(newText);
+                return true;
+            }
+        });
+
+    }
+
+    private void filterList(String newText) {
+        List<User> filteredList = new ArrayList<>();
+        for (User user : this.users) {
+            if (user.email.toLowerCase().contains(newText.toLowerCase()) // search for email
+                    || user.name.toLowerCase().contains(newText.toLowerCase())) { // search for name
+                filteredList.add(user);
+            }
+
+
+        }
+        if (filteredList.isEmpty()) {
+            binding.textDataNotFound.setVisibility(View.VISIBLE);
+            binding.usersRecyclerView.setVisibility(View.GONE);
+        } else {
+            UsersAdapter usersAdapter = new UsersAdapter(filteredList, this);
+            binding.usersRecyclerView.setAdapter(usersAdapter);
+            binding.usersRecyclerView.setVisibility(View.VISIBLE);
+            binding.textDataNotFound.setVisibility(View.GONE);
+        }
+    }
+
+    public void setFilteredList(List<User> filteredList) {
+        this.users = filteredList;
+    }
+
+    private void showToast(String message) {
+        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+    }
+
+    private void getUsers() {
         loading(true);
         FirebaseFirestore database = FirebaseFirestore.getInstance();
         database.collection(Constants.KEY_COLLECTION_USERS).get().addOnCompleteListener(task -> {
             loading(false);
             String currentId = preferenceManager.getString(Constants.KEY_USER_ID);
-            if(task.isSuccessful() && task.getResult()!=null){
-                List<User> users = new ArrayList<>();
-                for(QueryDocumentSnapshot queryDocumentSnapshot : task.getResult()){
-                    if(currentId.equals(queryDocumentSnapshot.getId())){
+            if (task.isSuccessful() && task.getResult() != null) {
+                users = new ArrayList<>();
+                for (QueryDocumentSnapshot queryDocumentSnapshot : task.getResult()) {
+                    if (currentId.equals(queryDocumentSnapshot.getId())) {
                         continue;
                     }
                     User user = new User();
@@ -58,26 +108,24 @@ public class UsersActivity extends BaseActivity implements UserListener {
                     users.add(user);
                 }
                 //MT list
-                if(users.size() >= 0){
+                if (users.size() >= 0) {
                     UsersAdapter usersAdapter = new UsersAdapter(users, this);
                     binding.usersRecyclerView.setAdapter(usersAdapter);
                     binding.usersRecyclerView.setVisibility(View.VISIBLE);
-                }
-                else showErrorMessage();
-            }
-            else showErrorMessage();
+                } else showErrorMessage();
+            } else showErrorMessage();
         });
     }
 
-    private void showErrorMessage(){
+    private void showErrorMessage() {
         binding.textErrorMessage.setText(String.format("%s", "No user available"));
         binding.textErrorMessage.setVisibility(View.VISIBLE);
     }
 
-    private void loading(Boolean isLoading){
-        if(isLoading){
+    private void loading(Boolean isLoading) {
+        if (isLoading) {
             binding.progressBar.setVisibility(View.VISIBLE);
-        }else binding.progressBar.setVisibility(View.INVISIBLE);
+        } else binding.progressBar.setVisibility(View.INVISIBLE);
     }
 
     @Override
