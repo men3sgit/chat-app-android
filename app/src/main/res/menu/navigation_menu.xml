@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/menuProfile"
+        android:icon="@drawable/profile"
+        android:title="@string/profile" />
+    <item
+        android:id="@+id/menuNotification"
+        android:icon="@drawable/notification"
+        android:title="@string/notifications" />
+    <item
+        android:id="@+id/menuLogout"
+        android:icon="@drawable/logout"
+        android:title="@string/log_out" />
+    <item android:title="@string/others">
+        <menu>
+            <item
+                android:id="@+id/menuSetting"
+                android:icon="@drawable/setting"
+                android:title="@string/setting" />
+            <item
+                android:id="@+id/menuShare"
+                android:icon="@drawable/share"
+                android:title="@string/share" />
+        </menu>
+    </item>
+
+
+</menu>

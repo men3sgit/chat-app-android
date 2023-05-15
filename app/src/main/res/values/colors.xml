@@ -12,4 +12,6 @@
     <color name="pink">#f3a0d7</color>
     <color name="error">#FF0000</color>
     <color name="online">#008000</color>
+    <color name="active">#16D516</color>
+    <color name="busy">#D11A29</color>
 </resources>
