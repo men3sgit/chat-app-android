@@ -14,4 +14,10 @@
     <string name="select_user">Select User</string>
     <string name="type_a_message">Type a message</string>
     <string name="online">Online</string>
+    <string name="profile">Profile</string>
+    <string name="log_out">Log out</string>
+    <string name="setting">Setting</string>
+    <string name="share">Share</string>
+    <string name="others">Others</string>
+    <string name="notifications">Notifications</string>
 </resources>
