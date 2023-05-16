@@ -9,9 +9,17 @@
         android:icon="@drawable/notification"
         android:title="@string/notifications" />
     <item
-        android:id="@+id/menuLogout"
-        android:icon="@drawable/logout"
-        android:title="@string/log_out" />
+        android:id="@+id/menuArchive"
+        android:icon="@drawable/archive"
+        android:title="@string/archive"/>
+    <item
+        android:id="@+id/menuHome"
+        android:icon="@drawable/home"
+        android:title="@string/home" />
+    <item
+        android:id="@+id/menuSignOut"
+        android:icon="@drawable/sign_out"
+        android:title="@string/sign_out" />
     <item android:title="@string/others">
         <menu>
             <item
