@@ -226,7 +226,7 @@ public class MainActivity extends BaseActivity implements ConversionListener, Na
         if (itemId == CURRENT_FRAGMENT) return;
         CURRENT_FRAGMENT = itemId;
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.content_main, fragment);
+        fragmentTransaction.replace(R.id.mainLayout, fragment);
         fragmentTransaction.commit();
     }
 }
