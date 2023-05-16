@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.inputmethodservice.KeyboardView;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
@@ -17,6 +18,8 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
@@ -68,7 +71,6 @@ public class ChatActivity extends BaseActivity {
     private FirebaseFirestore database;
     private String conversionId = null;
     private Boolean isReceiverAvailable = false;
-    private static final int IMAGE_PICKER_REQUEST = 1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -345,7 +347,7 @@ public class ChatActivity extends BaseActivity {
     private void openBottomPicker(){
         List<Uri> selectedUriList = new ArrayList<>();
         TedBottomPicker.with(ChatActivity.this)
-                .setPeekHeight(1600)
+                .setPeekHeight(800)
                 .showTitle(false)
                 .setCompleteButtonText("Done")
                 .setEmptySelectionText("No Select")
