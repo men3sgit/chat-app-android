@@ -50,7 +50,6 @@ public class MainActivity extends BaseActivity implements ConversionListener, Na
     private FirebaseFirestore database;
     private static int CURRENT_FRAGMENT = R.id.menuProfile;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,6 +75,7 @@ public class MainActivity extends BaseActivity implements ConversionListener, Na
     }
 
     private void setListeners() {
+
         binding.addNewChat.setOnClickListener(v ->
                 startActivity(new Intent(getApplicationContext(), UsersActivity.class)));
         binding.imageProfile.setOnClickListener(v -> {
@@ -83,15 +83,9 @@ public class MainActivity extends BaseActivity implements ConversionListener, Na
         });
 
         binding.imageProfile.setOnClickListener(v -> binding.drawerLayout.openDrawer(GravityCompat.START));
-
         binding.navigationView.setNavigationItemSelectedListener(this);
-    }
-
-
-    private void editProfile() {
 
     }
-
 
     private void loadUserDetails() {
         final String name = preferenceManager.getString(Constants.KEY_NAME);
@@ -102,6 +96,8 @@ public class MainActivity extends BaseActivity implements ConversionListener, Na
         Render.renderingBitmap(binding.imageProfile, src);
 
         // loading Navigation View
+        System.out.println(gender);
+        System.out.println(birthDate);
         View headerNav = binding.navigationView.getHeaderView(0);
         Render.renderingBitmap((RoundedImageView) headerNav.findViewById(R.id.headerImageProfile), src);
         ((TextView) headerNav.findViewById(R.id.headerTextName)).setText(name);
@@ -195,6 +191,7 @@ public class MainActivity extends BaseActivity implements ConversionListener, Na
         }).addOnFailureListener(e -> showToast("Unable to sign out"));
     }
 
+
     @Override
     public void onConversionClicked(User user) {
         Intent intent = new Intent(getApplicationContext(), ChatActivity.class);
@@ -212,8 +209,8 @@ public class MainActivity extends BaseActivity implements ConversionListener, Na
             case R.id.menuNotification:
                 replaceFragment(FragmentFactory.createFragment(FragmentType.NOTIFICATION), id);
                 break;
-            case R.id.menuLogout:
-                replaceFragment(FragmentFactory.createFragment(FragmentType.SIGN_OUT), id);
+            case R.id.menuSignOut:
+                signOut();
                 break;
             case R.id.menuSetting:
                 replaceFragment(FragmentFactory.createFragment(FragmentType.SETTING), id);
@@ -227,9 +224,9 @@ public class MainActivity extends BaseActivity implements ConversionListener, Na
 
     private void replaceFragment(Fragment fragment, int itemId) {
         if (itemId == CURRENT_FRAGMENT) return;
+        CURRENT_FRAGMENT = itemId;
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.content_main, fragment);
         fragmentTransaction.commit();
     }
-
 }
