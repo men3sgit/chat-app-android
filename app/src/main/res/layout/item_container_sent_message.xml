@@ -7,6 +7,15 @@
     android:padding="@dimen/_4sdp">
 
     <TextView
+        android:id="@+id/textDateTime"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_12sdp"
+        android:textColor="@color/secondary_text"
+        android:textSize="@dimen/_8ssp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+    <TextView
         android:id="@+id/textMessage"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -18,19 +27,23 @@
         app:layout_constraintWidth_max="wrap"
         android:textColor="@color/white"
         android:textSize="@dimen/_13ssp"
+
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/textDateTime"
         app:layout_constraintWidth_percent="0.8"/>
-    
-    <TextView
-        android:id="@+id/textDateTime"
-        android:layout_width="0dp"
+    <com.makeramen.roundedimageview.RoundedImageView
+        android:id="@+id/imageMessage"
+        android:layout_width="@dimen/_200sdp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/_4sdp"
-        android:textColor="@color/secondary_text"
-        android:textSize="@dimen/_8ssp"
+        android:adjustViewBounds="true"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textMessage"/>
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/textDateTime"
+        app:riv_corner_radius="@dimen/_16sdp"
+        android:visibility="gone"
+        />
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
