@@ -40,11 +40,11 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
-//import com.karumi.dexter.Dexter;
-//import com.karumi.dexter.MultiplePermissionsReport;
-//import com.karumi.dexter.PermissionToken;
-//import com.karumi.dexter.listener.PermissionRequest;
-//import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.MultiplePermissionsReport;
+import com.karumi.dexter.PermissionToken;
+import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 
 
 import java.text.SimpleDateFormat;
@@ -56,8 +56,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
-//import gun0912.tedbottompicker.TedBottomPicker;
-//import gun0912.tedbottompicker.TedBottomSheetDialogFragment;
+import gun0912.tedbottompicker.TedBottomPicker;
+import gun0912.tedbottompicker.TedBottomSheetDialogFragment;
 
 public class ChatActivity extends BaseActivity {
 
@@ -268,7 +268,7 @@ public class ChatActivity extends BaseActivity {
         binding.layoutSend.setOnClickListener(view -> sendMessage());
 
         binding.layoutImage.setOnClickListener(view -> {
-//            requestPermission();
+            requestPermission();
         });
         binding.imageInfo.setOnClickListener(view -> {
             Intent intent = new Intent(getApplicationContext(), ReceiverInformationActivity.class);
@@ -325,44 +325,48 @@ public class ChatActivity extends BaseActivity {
 
     }
 
-//    private void requestPermission(){
-//        Dexter.withActivity(this)
-//                .withPermissions(
-//                        Manifest.permission.READ_EXTERNAL_STORAGE,
-//                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
-//                        Manifest.permission.CAMERA
-//                )
-//                .withListener(new MultiplePermissionsListener() {
-//                    @Override
-//                    public void onPermissionsChecked(MultiplePermissionsReport report) {
-//                        if (report.areAllPermissionsGranted()) {
-//                            openBottomPicker();
-//                        } else {
-//                            Toast.makeText(ChatActivity.this, "Bạn chưa cấp quyền truy cập.", Toast.LENGTH_SHORT).show();
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
-//                        token.continuePermissionRequest();
-//                    }
-//                })
-//                .check();
-//    }
-//
-//    private void openBottomPicker(){
-//        List<Uri> selectedUriList = new ArrayList<>();
-//        TedBottomPicker.with(ChatActivity.this)
-//                .setPeekHeight(1600)
-//                .showTitle(false)
-//                .setCompleteButtonText("Done")
-//                .setEmptySelectionText("No Select")
-//                .setSelectedUriList(selectedUriList)
-//                .showMultiImage(new TedBottomSheetDialogFragment.OnMultiImageSelectedListener() {
-//                    @Override
-//                    public void onImagesSelected(List<Uri> uriList) {
-//
-//                    }
-//                });
-//    }
+    private void requestPermission(){
+        Dexter.withActivity(this)
+                .withPermissions(
+                        Manifest.permission.READ_EXTERNAL_STORAGE,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                        Manifest.permission.CAMERA
+                )
+                .withListener(new MultiplePermissionsListener() {
+                    @Override
+                    public void onPermissionsChecked(MultiplePermissionsReport report) {
+                        if (report.areAllPermissionsGranted()) {
+                            openBottomPicker();
+                        } else {
+                            Toast.makeText(ChatActivity.this, "Bạn chưa cấp quyền truy cập.", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
+                        token.continuePermissionRequest();
+                    }
+                })
+                .check();
+    }
+
+    private void openBottomPicker(){
+        List<Uri> selectedUriList = new ArrayList<>();
+        TedBottomPicker.with(ChatActivity.this)
+                .setPeekHeight(1600)
+                .showTitle(false)
+                .setSelectMinCount(1)
+                .setSelectMinCountErrorText("Please choose a photo to send")
+                .setSelectMaxCount(9)
+                .setSelectMaxCountErrorText("select up to 9 photos")
+                .setCompleteButtonText("Done")
+                .setEmptySelectionText("No Select")
+                .setSelectedUriList(selectedUriList)
+                .showMultiImage(new TedBottomSheetDialogFragment.OnMultiImageSelectedListener() {
+                    @Override
+                    public void onImagesSelected(List<Uri> uriList) {
+
+                    }
+                });
+    }
 }

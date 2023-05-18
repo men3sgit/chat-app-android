@@ -67,6 +67,12 @@ dependencies {
     implementation 'androidx.navigation:navigation-fragment-ktx:2.2.0-rc03'
     implementation 'androidx.navigation:navigation-ui-ktx:2.2.0-rc03'
 
+    //Tedbottompicker
+    implementation 'gun0912.ted:tedbottompicker:2.0.1'
+
+    implementation 'com.github.bumptech.glide:glide:4.13.0'
+
+    implementation 'com.karumi:dexter:6.2.2'
 
 
 }

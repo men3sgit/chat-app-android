@@ -216,6 +216,7 @@ public class MainActivity extends BaseActivity implements ConversionListener, Na
         return true;
     }
 
+
 //    private void replaceFragment(Fragment fragment, int itemId) {
 //        if (itemId == CURRENT_FRAGMENT) return;
 //        CURRENT_FRAGMENT = itemId;
@@ -223,4 +224,8 @@ public class MainActivity extends BaseActivity implements ConversionListener, Na
 //        fragmentTransaction.replace(R.id.content_main, fragment);
 //        fragmentTransaction.commit();
 //    }
+
+  
+    }
+
 }
