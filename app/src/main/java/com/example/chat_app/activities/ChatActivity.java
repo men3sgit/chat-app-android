@@ -3,6 +3,7 @@ package com.example.chat_app.activities;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -10,6 +11,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Base64;
@@ -32,6 +34,7 @@ import com.example.chat_app.models.ChatMessage;
 import com.example.chat_app.models.User;
 import com.example.chat_app.utilities.Constants;
 import com.example.chat_app.utilities.PreferenceManager;
+import com.example.chat_app.utilities.Render;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentReference;
@@ -46,8 +49,11 @@ import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
@@ -92,6 +98,7 @@ public class ChatActivity extends BaseActivity {
         HashMap<String, Object> message = new HashMap<>();
         message.put(Constants.KEY_SENDER_ID, preferenceManager.getString(Constants.KEY_USER_ID));
         message.put(Constants.KEY_RECEIVER_ID, receiverUser.id);
+        message.put(Constants.KEY_TYPE, Constants.KEY_TEXT_MESS);
         message.put(Constants.KEY_MESSAGE, binding.inputMessage.getText().toString());
         message.put(Constants.KEY_TIMESTAMP, new Date());
         database.collection(Constants.KEY_COLLECTION_CHAT).add(message);
@@ -158,6 +165,7 @@ public class ChatActivity extends BaseActivity {
                     ChatMessage chatMessage = new ChatMessage();
                     chatMessage.senderId = documentChange.getDocument().getString(Constants.KEY_SENDER_ID);
                     chatMessage.receiverId = documentChange.getDocument().getString(Constants.KEY_RECEIVER_ID);
+                    chatMessage.type = documentChange.getDocument().getString(Constants.KEY_TYPE);
                     chatMessage.message = documentChange.getDocument().getString(Constants.KEY_MESSAGE);
                     chatMessage.dateTime = getReadableDateTime(documentChange.getDocument().getDate(Constants.KEY_TIMESTAMP));
                     chatMessage.dateObject = documentChange.getDocument().getDate(Constants.KEY_TIMESTAMP);
@@ -263,7 +271,11 @@ public class ChatActivity extends BaseActivity {
             binding.layoutMic.setVisibility(View.VISIBLE);
             binding.layoutImage.setVisibility(View.VISIBLE);
         });
-        binding.layoutSend.setOnClickListener(view -> sendMessage());
+        binding.layoutSend.setOnClickListener(view -> {
+            if(!binding.inputMessage.getText().toString().isEmpty()) {
+                sendMessage();
+            }
+        });
 
         binding.layoutImage.setOnClickListener(view -> {
             requestPermission();
@@ -273,7 +285,7 @@ public class ChatActivity extends BaseActivity {
 
 
     private String getReadableDateTime(Date date){
-        return new SimpleDateFormat("HH:mm:ss dd/MM/yyyy", Locale.getDefault()).format(date);
+        return new SimpleDateFormat("HH:mm dd/MM/yyyy", Locale.getDefault()).format(date);
     }
 
     private void addConversion(HashMap<String, Object> conversion){
@@ -351,14 +363,55 @@ public class ChatActivity extends BaseActivity {
                 .setSelectMinCountErrorText("Please choose a photo to send")
                 .setSelectMaxCount(9)
                 .setSelectMaxCountErrorText("select up to 9 photos")
-                .setCompleteButtonText("Done")
+                .setCompleteButtonText("Send")
                 .setEmptySelectionText("No Select")
                 .setSelectedUriList(selectedUriList)
                 .showMultiImage(new TedBottomSheetDialogFragment.OnMultiImageSelectedListener() {
                     @Override
                     public void onImagesSelected(List<Uri> uriList) {
-
+                        if(uriList!=null && !uriList.isEmpty()) {
+                            sendImage(getSelectedImages(uriList));
+                        }
                     }
                 });
+    }
+    private List<Bitmap> getSelectedImages(List<Uri> selectedUris) {
+        List<Bitmap> selectedImages = new ArrayList<>();
+        Bitmap bitmap;
+        for (Uri uri : selectedUris) {
+           try {
+               bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
+               selectedImages.add(bitmap);
+           }catch (IOException e){
+               e.printStackTrace();
+           }
+        }
+        return selectedImages;
+    }
+    private void sendImage(List<Bitmap> list){
+        for(int i = 0; i< list.size(); i++) {
+            HashMap<String, Object> message = new HashMap<>();
+            message.put(Constants.KEY_SENDER_ID, preferenceManager.getString(Constants.KEY_USER_ID));
+            message.put(Constants.KEY_RECEIVER_ID, receiverUser.id);
+            message.put(Constants.KEY_TYPE, Constants.KEY_IMAGE_MESS);
+            message.put(Constants.KEY_MESSAGE, Render.encodeImage(list.get(i)));
+            message.put(Constants.KEY_TIMESTAMP, new Date());
+            database.collection(Constants.KEY_COLLECTION_CHAT).add(message);
+            if(conversionId!=null){
+                updateConversion("sent pictures");
+            }
+            else{
+                HashMap<String, Object> conversion = new HashMap<>();
+                conversion.put(Constants.KEY_SENDER_ID, preferenceManager.getString(Constants.KEY_USER_ID));
+                conversion.put(Constants.KEY_SENDER_NAME, preferenceManager.getString(Constants.KEY_NAME));
+                conversion.put(Constants.KEY_SENDER_IMAGE, preferenceManager.getString(Constants.KEY_IMAGE));
+                conversion.put(Constants.KEY_RECEIVER_ID, receiverUser.id);
+                conversion.put(Constants.KEY_RECEIVER_NAME, receiverUser.name);
+                conversion.put(Constants.KEY_RECEIVER_IMAGE, receiverUser.image);
+                conversion.put(Constants.KEY_LAST_MESSAGE, "sent pictures");
+                conversion.put(Constants.KEY_TIMESTAMP, new Date());
+                addConversion(conversion);
+            }
+        }
     }
 }
