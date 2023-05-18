@@ -4,6 +4,7 @@ package com.example.chat_app.activities;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -146,6 +147,7 @@ public class ChatActivity extends BaseActivity {
         database.collection(Constants.KEY_COLLECTION_CHAT).whereEqualTo(Constants.KEY_SENDER_ID, receiverUser.id)
                 .whereEqualTo(Constants.KEY_RECEIVER_ID, preferenceManager.getString(Constants.KEY_USER_ID))
                 .addSnapshotListener(eventListener);
+
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -267,6 +269,12 @@ public class ChatActivity extends BaseActivity {
 
         binding.layoutImage.setOnClickListener(view -> {
             requestPermission();
+        });
+        binding.imageInfo.setOnClickListener(view -> {
+            Intent intent = new Intent(getApplicationContext(), ReceiverInformationActivity.class);
+            intent.putExtra(Constants.KEY_USER, receiverUser);
+            startActivity(intent);
+            finish();
         });
     }
 

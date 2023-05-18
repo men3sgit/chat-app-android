@@ -3,7 +3,6 @@ package com.example.chat_app.activities;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -11,18 +10,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.view.GravityCompat;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 
 import com.example.chat_app.R;
 import com.example.chat_app.adapters.RecentConversationsAdapter;
 import com.example.chat_app.databinding.ActivityMainBinding;
-import com.example.chat_app.databinding.LayoutNavigationHeaderBinding;
-import com.example.chat_app.fragments.FragmentFactory;
-import com.example.chat_app.fragments.FragmentType;
-import com.example.chat_app.listeners.ConversionListener;
+import com.example.chat_app.fragments.listeners.ConversionListener;
 import com.example.chat_app.models.ChatMessage;
 import com.example.chat_app.models.User;
 import com.example.chat_app.utilities.Constants;
@@ -78,6 +71,7 @@ public class MainActivity extends BaseActivity implements ConversionListener, Na
 
         binding.addNewChat.setOnClickListener(v ->
                 startActivity(new Intent(getApplicationContext(), UsersActivity.class)));
+
         binding.imageProfile.setOnClickListener(v -> {
             binding.drawerLayout.openDrawer(GravityCompat.START);
         });
@@ -202,31 +196,36 @@ public class MainActivity extends BaseActivity implements ConversionListener, Na
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
-        switch (id) {
-            case R.id.menuProfile:
-                replaceFragment(FragmentFactory.createFragment(FragmentType.PROFILE), id);
-                break;
-            case R.id.menuNotification:
-                replaceFragment(FragmentFactory.createFragment(FragmentType.NOTIFICATION), id);
-                break;
-            case R.id.menuSignOut:
-                signOut();
-                break;
-            case R.id.menuSetting:
-                replaceFragment(FragmentFactory.createFragment(FragmentType.SETTING), id);
-                break;
-            case R.id.menuShare:
-                replaceFragment(FragmentFactory.createFragment(FragmentType.SHARE), id);
-                break;
-        }
+//        switch (id) {
+//            case R.id.menuProfile:
+//                replaceFragment(FragmentFactory.createFragment(FragmentType.PROFILE), id);
+//                break;
+//            case R.id.menuNotification:
+//                replaceFragment(FragmentFactory.createFragment(FragmentType.NOTIFICATION), id);
+//                break;
+//            case R.id.menuSignOut:
+//                signOut();
+//                break;
+//            case R.id.menuSetting:
+//                replaceFragment(FragmentFactory.createFragment(FragmentType.SETTING), id);
+//                break;
+//            case R.id.menuShare:
+//                replaceFragment(FragmentFactory.createFragment(FragmentType.SHARE), id);
+//                break;
+//        }
         return true;
     }
 
-    private void replaceFragment(Fragment fragment, int itemId) {
-        if (itemId == CURRENT_FRAGMENT) return;
-        CURRENT_FRAGMENT = itemId;
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.mainLayout, fragment);
-        fragmentTransaction.commit();
+
+//    private void replaceFragment(Fragment fragment, int itemId) {
+//        if (itemId == CURRENT_FRAGMENT) return;
+//        CURRENT_FRAGMENT = itemId;
+//        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+//        fragmentTransaction.replace(R.id.content_main, fragment);
+//        fragmentTransaction.commit();
+//    }
+
+  
     }
+
 }

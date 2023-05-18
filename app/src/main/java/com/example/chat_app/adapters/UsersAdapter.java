@@ -2,7 +2,6 @@ package com.example.chat_app.adapters;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.text.Layout;
 import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
@@ -12,7 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.chat_app.databinding.ItemContainerUserBinding;
-import com.example.chat_app.listeners.UserListener;
+import com.example.chat_app.fragments.listeners.UserListener;
 import com.example.chat_app.models.User;
 
 import java.util.List;
