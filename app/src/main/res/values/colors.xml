@@ -14,4 +14,5 @@
     <color name="online">#008000</color>
     <color name="active">#16D516</color>
     <color name="busy">#D11A29</color>
+    <color name="color_default_cover_background">#222</color>
 </resources>

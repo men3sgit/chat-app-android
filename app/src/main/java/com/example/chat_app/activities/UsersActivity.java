@@ -8,7 +8,7 @@ import android.widget.Toast;
 
 import com.example.chat_app.adapters.UsersAdapter;
 import com.example.chat_app.databinding.ActivityUsersBinding;
-import com.example.chat_app.listeners.UserListener;
+import com.example.chat_app.fragments.listeners.UserListener;
 import com.example.chat_app.models.User;
 import com.example.chat_app.utilities.Constants;
 import com.example.chat_app.utilities.PreferenceManager;
@@ -101,6 +101,9 @@ public class UsersActivity extends BaseActivity implements UserListener {
                     user.name = queryDocumentSnapshot.getString(Constants.KEY_NAME);
                     user.email = queryDocumentSnapshot.getString(Constants.KEY_EMAIL);
                     user.image = queryDocumentSnapshot.getString(Constants.KEY_IMAGE);
+                    user.birthDate = queryDocumentSnapshot.getString(Constants.KEY_BIRTH_DATE);
+                    user.gender = queryDocumentSnapshot.getString(Constants.KEY_GENDER);
+                    user.phoneNumber = queryDocumentSnapshot.getString(Constants.KEY_PHONE_NUMBER);
                     user.token = queryDocumentSnapshot.getString(Constants.KEY_FCM_TOKEN);
                     user.id = queryDocumentSnapshot.getId();
                     users.add(user);

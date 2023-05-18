@@ -1,4 +1,4 @@
-package com.example.chat_app.listeners;
+package com.example.chat_app.fragments.listeners;
 
 import com.example.chat_app.models.User;
 

@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="@dimen/_16sdp"
+    tools:context=".activities.ReceiverInformationActivity">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_160sdp">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_112sdp"
+            android:src="@drawable/wall"
+            android:scaleType="centerCrop"
+            />
+
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:id="@+id/imageProfile"
+            android:layout_width="@dimen/_100sdp"
+            android:layout_height="@dimen/_100sdp"
+            android:layout_gravity="center|bottom"
+            android:background="@drawable/background_image"
+            android:src="@drawable/tu_linh"
+            android:scaleType="centerCrop"
+            app:riv_oval="true" />
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/textName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_8sdp"
+        android:text="Nguyen Tu Linh"
+        android:textAlignment="center"
+        android:textColor="@color/primary_text"
+        android:textSize="@dimen/_16ssp"
+        android:textStyle="bold" />
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_16sdp">
+
+        <TableRow
+            android:layout_marginTop="@dimen/_8sdp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:text="Birth Date: "
+                android:layout_weight="1"
+                android:textColor="@color/primary_text" />
+
+            <TextView
+                android:layout_weight="4"
+                android:id="@+id/textBirthDate"
+                android:text="27/10/2002" />
+
+        </TableRow>
+        <TableRow
+            android:layout_marginTop="@dimen/_8sdp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:text="Gender: "
+                android:layout_weight="1"
+                android:textColor="@color/primary_text" />
+
+            <TextView
+                android:layout_weight="4"
+                android:id="@+id/textGender"
+                android:text="Female" />
+
+        </TableRow>
+
+        <TableRow android:layout_marginTop="@dimen/_8sdp">
+
+            <TextView
+                android:layout_weight="1"
+                android:text="Email:"
+                android:textColor="@color/primary_text" />
+
+            <TextView
+                android:id="@+id/textEmail"
+                android:layout_weight="4"
+                android:text="tulinhnguyen2710@gmail.com" />
+        </TableRow>
+
+        <TableRow android:layout_marginTop="@dimen/_8sdp">
+
+            <TextView
+                android:layout_weight="1"
+                android:text="Phone Number:"
+                android:textColor="@color/primary_text" />
+
+            <TextView
+                android:id="@+id/textPhoneNumber"
+                android:layout_weight="4"
+                android:text="(+84) 379797979" />
+        </TableRow>
+    </TableLayout>
+</LinearLayout>
