@@ -1,9 +1,129 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/phg3"
     tools:context=".activities.ProfileActivity">
+    <FrameLayout
+        android:id="@+id/layoutImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginVertical="@dimen/_64sdp"
+        android:layout_marginTop="@dimen/_16sdp">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:id="@+id/imageProfile"
+            android:layout_width="@dimen/_100sdp"
+            android:layout_height="@dimen/_100sdp"
+            android:background="@drawable/background_image"
+            android:src="@drawable/tu_linh"
+            android:scaleType="centerCrop"
+            app:riv_oval="true" />
+
+        <TextView
+            android:id="@+id/textAddImage"
+            android:layout_width="@dimen/_30sdp"
+            android:layout_height="@dimen/_30sdp"
+            android:layout_gravity="end|bottom"
+            android:background="@drawable/camera" />
+    </FrameLayout>
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:padding="@dimen/_16sdp"
+        >
+
+        <TableRow android:layout_marginBottom="@dimen/_12sdp">
+
+            <TextView
+                style="@style/title_column"
+                android:text="Email:" />
+
+            <TextView
+                android:id="@+id/textEmail"
+                style="@style/value_column"
+                android:text="tulinhnguyen2710@gmail.com" />
+        </TableRow>
+
+        <TableRow android:layout_marginBottom="@dimen/_12sdp">
+
+            <TextView
+                style="@style/title_column"
+                android:text="Name:" />
+
+            <TextView
+                android:id="@+id/textName"
+                style="@style/value_column"
+
+                android:text="Nguyen Thi Tu Linh" />
+        </TableRow>
+
+        <TableRow android:layout_marginBottom="@dimen/_12sdp">
+
+            <TextView
+                style="@style/title_column"
+                android:text="Birth Date:" />
+
+            <TextView
+                android:id="@+id/textBirthDate"
+                style="@style/value_column"
+
+                android:text="27/10/2002" />
+        </TableRow>
+
+        <TableRow android:layout_marginBottom="@dimen/_12sdp">
+
+            <TextView
+                style="@style/title_column"
+                android:text="Gender:" />
+
+            <TextView
+                android:id="@+id/textGender"
+
+                style="@style/value_column"
+                android:text="Female" />
+        </TableRow>
+
+        <TableRow android:layout_marginBottom="@dimen/_12sdp">
+
+            <TextView
+                style="@style/title_column"
+                android:text="Phone number:" />
+
+            <TextView
+                android:id="@+id/textPhoneNumber"
+
+                style="@style/value_column"
+                android:text="0377779999" />
+        </TableRow>
+    </TableLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center|end"
+        android:layout_marginTop="@dimen/_100sdp"
+        android:padding="@dimen/_16sdp"
+        >
+        <Button
+            android:id="@+id/buttonEdit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Edit"
+            android:backgroundTint="#EA9AC6"
+            android:layout_marginEnd="@dimen/_16sdp"/>
+
+        <Button
+            android:id="@+id/buttonUpdate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Update"
+            android:backgroundTint="#EA9AC6"/>
+
+    </LinearLayout>
+</FrameLayout>

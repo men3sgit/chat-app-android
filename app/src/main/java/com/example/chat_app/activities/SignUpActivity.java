@@ -148,16 +148,21 @@ public class SignUpActivity extends AppCompatActivity {
         user.put(Constants.KEY_EMAIL, binding.inputEmail.getText().toString());
         user.put(Constants.KEY_PASSWORD, binding.inputPassword.getText().toString());
         user.put(Constants.KEY_IMAGE, encodedImage);
+        user.put(Constants.KEY_EMAIL,binding.inputEmail.getText().toString());
         user.put(Constants.KEY_BIRTH_DATE, binding.buttonBirthDate.getText().toString());
         user.put(Constants.KEY_GENDER, getGender());
+        user.put(Constants.KEY_PHONE_NUMBER,null);
         database.collection(Constants.KEY_COLLECTION_USERS).add(user).addOnSuccessListener(documentReference -> {
             loading(false);
             preferenceManager.putBoolean(Constants.KEY_IS_SIGNED_IN, true);
             preferenceManager.putString(Constants.KEY_USER_ID, documentReference.getId());
             preferenceManager.putString(Constants.KEY_NAME, binding.inputName.getText().toString());
             preferenceManager.putString(Constants.KEY_IMAGE, encodedImage);
+            preferenceManager.putString(Constants.KEY_EMAIL, binding.inputEmail.getText().toString());
             preferenceManager.putString(Constants.KEY_BIRTH_DATE, binding.buttonBirthDate.getText().toString());
             preferenceManager.putString(Constants.KEY_GENDER, getGender());
+            preferenceManager.putString(Constants.KEY_PHONE_NUMBER, null);
+
             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);

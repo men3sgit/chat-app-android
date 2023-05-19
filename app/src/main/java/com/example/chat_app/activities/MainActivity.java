@@ -196,16 +196,26 @@ public class MainActivity extends BaseActivity implements ConversionListener, Na
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
-//        switch (id) {
-//            case R.id.menuProfile:
+
+        switch (id) {
+            case R.id.menuProfile:
+                Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
+                intent.putExtra(Constants.KEY_EMAIL,preferenceManager.getString(Constants.KEY_EMAIL));
+                intent.putExtra(Constants.KEY_IMAGE,preferenceManager.getString(Constants.KEY_IMAGE));
+                intent.putExtra(Constants.KEY_NAME,preferenceManager.getString(Constants.KEY_NAME));
+                intent.putExtra(Constants.KEY_BIRTH_DATE,preferenceManager.getString(Constants.KEY_BIRTH_DATE));
+                intent.putExtra(Constants.KEY_GENDER,preferenceManager.getString(Constants.KEY_GENDER));
+                intent.putExtra(Constants.KEY_PHONE_NUMBER,preferenceManager.getString(Constants.KEY_PHONE_NUMBER));
+                startActivity(intent);
+                finish();
 //                replaceFragment(FragmentFactory.createFragment(FragmentType.PROFILE), id);
-//                break;
+                break;
 //            case R.id.menuNotification:
 //                replaceFragment(FragmentFactory.createFragment(FragmentType.NOTIFICATION), id);
 //                break;
-//            case R.id.menuSignOut:
-//                signOut();
-//                break;
+            case R.id.menuSignOut:
+                signOut();
+                break;
 //            case R.id.menuSetting:
 //                replaceFragment(FragmentFactory.createFragment(FragmentType.SETTING), id);
 //                break;
@@ -213,8 +223,8 @@ public class MainActivity extends BaseActivity implements ConversionListener, Na
 //                replaceFragment(FragmentFactory.createFragment(FragmentType.SHARE), id);
 //                break;
 //        }
+        }
         return true;
-    }
 
 //    private void replaceFragment(Fragment fragment, int itemId) {
 //        if (itemId == CURRENT_FRAGMENT) return;
@@ -223,4 +233,5 @@ public class MainActivity extends BaseActivity implements ConversionListener, Na
 //        fragmentTransaction.replace(R.id.content_main, fragment);
 //        fragmentTransaction.commit();
 //    }
+    }
 }
