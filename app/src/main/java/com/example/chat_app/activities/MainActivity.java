@@ -132,12 +132,14 @@ public class MainActivity extends BaseActivity implements ConversionListener, Na
                         chatMessage.conversionImage = documentChange.getDocument().getString(Constants.KEY_RECEIVER_IMAGE);
                         chatMessage.conversionName = documentChange.getDocument().getString(Constants.KEY_RECEIVER_NAME);
                         chatMessage.conversionId = documentChange.getDocument().getString(Constants.KEY_RECEIVER_ID);
+                        chatMessage.message = "You: "+documentChange.getDocument().getString(Constants.KEY_LAST_MESSAGE);
                     } else {
                         chatMessage.conversionImage = documentChange.getDocument().getString(Constants.KEY_SENDER_IMAGE);
                         chatMessage.conversionName = documentChange.getDocument().getString(Constants.KEY_SENDER_NAME);
                         chatMessage.conversionId = documentChange.getDocument().getString(Constants.KEY_SENDER_ID);
+                        chatMessage.message = documentChange.getDocument().getString(Constants.KEY_LAST_MESSAGE);
                     }
-                    chatMessage.message = documentChange.getDocument().getString(Constants.KEY_LAST_MESSAGE);
+
                     chatMessage.dateObject = documentChange.getDocument().getDate(Constants.KEY_TIMESTAMP);
                     conversations.add(chatMessage);
                 } else if (documentChange.getType() == DocumentChange.Type.MODIFIED) {
@@ -226,6 +228,7 @@ public class MainActivity extends BaseActivity implements ConversionListener, Na
         }
         return true;
 
+
 //    private void replaceFragment(Fragment fragment, int itemId) {
 //        if (itemId == CURRENT_FRAGMENT) return;
 //        CURRENT_FRAGMENT = itemId;
@@ -233,5 +236,12 @@ public class MainActivity extends BaseActivity implements ConversionListener, Na
 //        fragmentTransaction.replace(R.id.content_main, fragment);
 //        fragmentTransaction.commit();
 //    }
+
     }
+
+
+  
+    }
+
+
 }

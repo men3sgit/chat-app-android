@@ -18,6 +18,7 @@ public class Constants {
     public static final String KEY_COLLECTION_CHAT = "chat";
     public static final String KEY_SENDER_ID = "senderId";
     public static final String KEY_RECEIVER_ID = "receiverId";
+    public static final String KEY_TYPE = "type";
     public static final String KEY_MESSAGE = "message";
     public static final String KEY_TIMESTAMP = "timestamp";
     public static final String KEY_COLLECTION_CONVERSATIONS = "conversations";
@@ -32,7 +33,8 @@ public class Constants {
     public static final String REMOTE_MSG_CONTENT_TYPE = "Content-Type";
     public static final String REMOTE_MSG_DATA = "data";
     public static final String REMOTE_MSG_REGISTRATION_IDS = "registration_ids";
-
+    public static final String KEY_TEXT_MESS = "text";
+    public static final String KEY_IMAGE_MESS = "image";
     public static HashMap<String, String> remoteMsgHeaders = null;
     public static HashMap<String, String> getRemoteMsgHeaders(){
         if(remoteMsgHeaders == null){
@@ -42,4 +44,8 @@ public class Constants {
         }
         return remoteMsgHeaders;
     }
+
+//    Test commit
+    //Test
+//    Sdjsdfjsdljewlkjl
 }
