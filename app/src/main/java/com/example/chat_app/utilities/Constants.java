@@ -35,6 +35,7 @@ public class Constants {
     public static final String REMOTE_MSG_REGISTRATION_IDS = "registration_ids";
     public static final String KEY_TEXT_MESS = "text";
     public static final String KEY_IMAGE_MESS = "image";
+    public static final String KEY_NO_DATA = "No data";
     public static HashMap<String, String> remoteMsgHeaders = null;
     public static HashMap<String, String> getRemoteMsgHeaders(){
         if(remoteMsgHeaders == null){

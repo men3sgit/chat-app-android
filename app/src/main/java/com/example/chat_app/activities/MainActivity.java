@@ -132,7 +132,7 @@ public class MainActivity extends BaseActivity implements ConversionListener, Na
                         chatMessage.conversionImage = documentChange.getDocument().getString(Constants.KEY_RECEIVER_IMAGE);
                         chatMessage.conversionName = documentChange.getDocument().getString(Constants.KEY_RECEIVER_NAME);
                         chatMessage.conversionId = documentChange.getDocument().getString(Constants.KEY_RECEIVER_ID);
-                        chatMessage.message = "You: "+documentChange.getDocument().getString(Constants.KEY_LAST_MESSAGE);
+                        chatMessage.message = "You: " + documentChange.getDocument().getString(Constants.KEY_LAST_MESSAGE);
                     } else {
                         chatMessage.conversionImage = documentChange.getDocument().getString(Constants.KEY_SENDER_IMAGE);
                         chatMessage.conversionName = documentChange.getDocument().getString(Constants.KEY_SENDER_NAME);
@@ -202,12 +202,12 @@ public class MainActivity extends BaseActivity implements ConversionListener, Na
         switch (id) {
             case R.id.menuProfile:
                 Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
-                intent.putExtra(Constants.KEY_EMAIL,preferenceManager.getString(Constants.KEY_EMAIL));
-                intent.putExtra(Constants.KEY_IMAGE,preferenceManager.getString(Constants.KEY_IMAGE));
-                intent.putExtra(Constants.KEY_NAME,preferenceManager.getString(Constants.KEY_NAME));
-                intent.putExtra(Constants.KEY_BIRTH_DATE,preferenceManager.getString(Constants.KEY_BIRTH_DATE));
-                intent.putExtra(Constants.KEY_GENDER,preferenceManager.getString(Constants.KEY_GENDER));
-                intent.putExtra(Constants.KEY_PHONE_NUMBER,preferenceManager.getString(Constants.KEY_PHONE_NUMBER));
+                intent.putExtra(Constants.KEY_EMAIL, preferenceManager.getString(Constants.KEY_EMAIL));
+                intent.putExtra(Constants.KEY_IMAGE, preferenceManager.getString(Constants.KEY_IMAGE));
+                intent.putExtra(Constants.KEY_NAME, preferenceManager.getString(Constants.KEY_NAME));
+                intent.putExtra(Constants.KEY_BIRTH_DATE, preferenceManager.getString(Constants.KEY_BIRTH_DATE));
+                intent.putExtra(Constants.KEY_GENDER, preferenceManager.getString(Constants.KEY_GENDER));
+                intent.putExtra(Constants.KEY_PHONE_NUMBER, preferenceManager.getString(Constants.KEY_PHONE_NUMBER));
                 startActivity(intent);
                 finish();
 //                replaceFragment(FragmentFactory.createFragment(FragmentType.PROFILE), id);
@@ -237,10 +237,6 @@ public class MainActivity extends BaseActivity implements ConversionListener, Na
 //        fragmentTransaction.commit();
 //    }
 
-    }
-
-
-  
     }
 
 
