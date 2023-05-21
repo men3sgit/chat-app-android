@@ -90,8 +90,6 @@ public class MainActivity extends BaseActivity implements ConversionListener, Na
         Render.renderingBitmap(binding.imageProfile, src);
 
         // loading Navigation View
-        System.out.println(gender);
-        System.out.println(birthDate);
         View headerNav = binding.navigationView.getHeaderView(0);
         Render.renderingBitmap((RoundedImageView) headerNav.findViewById(R.id.headerImageProfile), src);
         ((TextView) headerNav.findViewById(R.id.headerTextName)).setText(name);
@@ -193,6 +191,7 @@ public class MainActivity extends BaseActivity implements ConversionListener, Na
         Intent intent = new Intent(getApplicationContext(), ChatActivity.class);
         intent.putExtra(Constants.KEY_USER, user);
         startActivity(intent);
+
     }
 
     @Override
@@ -209,7 +208,6 @@ public class MainActivity extends BaseActivity implements ConversionListener, Na
                 intent.putExtra(Constants.KEY_GENDER, preferenceManager.getString(Constants.KEY_GENDER));
                 intent.putExtra(Constants.KEY_PHONE_NUMBER, preferenceManager.getString(Constants.KEY_PHONE_NUMBER));
                 startActivity(intent);
-                finish();
 //                replaceFragment(FragmentFactory.createFragment(FragmentType.PROFILE), id);
                 break;
 //            case R.id.menuNotification:
@@ -217,6 +215,9 @@ public class MainActivity extends BaseActivity implements ConversionListener, Na
 //                break;
             case R.id.menuSignOut:
                 signOut();
+                break;
+            case R.id.menuHome:
+                binding.drawerLayout.closeDrawer(GravityCompat.START);
                 break;
 //            case R.id.menuSetting:
 //                replaceFragment(FragmentFactory.createFragment(FragmentType.SETTING), id);
@@ -239,5 +240,12 @@ public class MainActivity extends BaseActivity implements ConversionListener, Na
 
     }
 
-
+    @Override
+    public void onBackPressed() {
+        if (binding.drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            binding.drawerLayout.closeDrawer(GravityCompat.START);
+            return;
+        }
+        super.onBackPressed();
+    }
 }

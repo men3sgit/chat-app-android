@@ -36,6 +36,8 @@ public class Constants {
     public static final String KEY_TEXT_MESS = "text";
     public static final String KEY_IMAGE_MESS = "image";
     public static final String KEY_NO_DATA = "No data";
+    public static final int AVAILABILITY = 1;
+    public static final int UNAVAILABILITY = 0;
     public static HashMap<String, String> remoteMsgHeaders = null;
     public static HashMap<String, String> getRemoteMsgHeaders(){
         if(remoteMsgHeaders == null){
