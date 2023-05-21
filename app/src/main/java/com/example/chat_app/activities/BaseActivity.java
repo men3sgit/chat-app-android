@@ -11,8 +11,6 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public class BaseActivity extends AppCompatActivity {
-    private static final int ACTIVE = 1;
-    private static final int INACTIVE = 0;
     private DocumentReference documentReference;
 
     @Override
@@ -26,12 +24,12 @@ public class BaseActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        documentReference.update(Constants.KEY_AVAILABILITY, INACTIVE);
+        documentReference.update(Constants.KEY_AVAILABILITY, Constants.UNAVAILABILITY);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        documentReference.update(Constants.KEY_AVAILABILITY, ACTIVE);
+        documentReference.update(Constants.KEY_AVAILABILITY, Constants.AVAILABILITY);
     }
 }

@@ -6,7 +6,14 @@
     android:layout_height="match_parent"
     android:background="@drawable/phg3"
     tools:context=".activities.ProfileActivity">
-
+    <TextView
+        android:id="@+id/buttonBackToMain"
+        android:layout_width="@dimen/_20sdp"
+        android:layout_height="@dimen/_20sdp"
+        android:background="@drawable/ic_back"
+        android:backgroundTint="@color/button_login"
+        android:layout_margin="@dimen/_16sdp"
+        />
     <FrameLayout
         android:id="@+id/layoutImage"
         android:layout_width="wrap_content"
@@ -14,6 +21,7 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginVertical="@dimen/_64sdp"
         android:layout_marginTop="@dimen/_16sdp">
+
 
         <com.makeramen.roundedimageview.RoundedImageView
             android:id="@+id/imageProfile"

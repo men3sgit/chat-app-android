@@ -12,7 +12,7 @@
     <color name="pink">#f3a0d7</color>
     <color name="error">#FF0000</color>
     <color name="online">#008000</color>
-    <color name="active">#16D516</color>
+    <color name="active">#0DF10D</color>
     <color name="busy">#D11A29</color>
     <color name="color_default_cover_background">#222</color>
 </resources>

@@ -19,9 +19,11 @@ import com.example.chat_app.utilities.Constants;
 import com.example.chat_app.utilities.DateAdapter;
 import com.example.chat_app.utilities.PreferenceManager;
 import com.example.chat_app.utilities.Render;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.io.ByteArrayOutputStream;
 import java.util.Calendar;
+import java.util.HashMap;
 
 // add image
 // update firebase
@@ -54,16 +56,17 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void setListeners() {
+        binding.buttonBackToMain.setOnClickListener(view -> finish());
         binding.buttonEdit.setOnClickListener(view -> {
             if (binding.tableEdit.getVisibility() == View.VISIBLE) {
                 return;
             }
+//            final String encodedImage = preferenceManager.getString(Constants.KEY_IMAGE);
             final String email = binding.textEmail.getText().toString();
             final String name = binding.textName.getText().toString();
             final String birthDate = binding.textBirthDate.getText().toString();
             final String gender = binding.textGender.getText().toString();
             final String phoneNumber = binding.textPhoneNumber.getText().toString();
-            final String encodedImage = preferenceManager.getString(Constants.KEY_IMAGE);
             binding.editEmail.setText(email);
             binding.editName.setText(name);
             binding.buttonBirthDate.setText(birthDate);
@@ -83,6 +86,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         binding.buttonUpdate.setOnClickListener(view -> {
             if (binding.tableRoot.getVisibility() == View.VISIBLE) {
+                showToast("Nothing to update!");
                 return;
             }
             final String name = binding.editName.getText().toString();
@@ -95,15 +99,34 @@ public class ProfileActivity extends AppCompatActivity {
             binding.textGender.setText(gender);
             binding.textPhoneNumber.setText(phoneNumber);
 
-//            preferenceManager.putString(Constants.KEY_IMAGE, encodedImage);
-            preferenceManager.putString(Constants.KEY_NAME, name);
-            preferenceManager.putString(Constants.KEY_BIRTH_DATE, birthDate);
-            preferenceManager.putString(Constants.KEY_GENDER, gender);
-            preferenceManager.putString(Constants.KEY_PHONE_NUMBER, phoneNumber.equalsIgnoreCase(Constants.KEY_NO_DATA) ? null : phoneNumber);
+            // firebase store
+            FirebaseFirestore database = FirebaseFirestore.getInstance();
+            HashMap<String, Object> user = new HashMap<>();
+            //user.put(Constants.KEY_IMAGE, encodedImage);
+            user.put(Constants.KEY_NAME, name);
+            user.put(Constants.KEY_BIRTH_DATE, birthDate);
+            user.put(Constants.KEY_GENDER, gender);
+            user.put(Constants.KEY_PHONE_NUMBER, phoneNumber);
+
+            database.collection(Constants.KEY_COLLECTION_USERS)
+                    .document(preferenceManager.getString(Constants.KEY_USER_ID))
+                    .update(user)
+                    .addOnSuccessListener(documentReference -> {
+                        //preferenceManager.putString(Constants.KEY_IMAGE, encodedImage);
+                        preferenceManager.putString(Constants.KEY_NAME, name);
+                        preferenceManager.putString(Constants.KEY_BIRTH_DATE, birthDate);
+                        preferenceManager.putString(Constants.KEY_GENDER, gender);
+                        preferenceManager.putString(Constants.KEY_PHONE_NUMBER, phoneNumber.equalsIgnoreCase(Constants.KEY_NO_DATA) ? null : phoneNumber);
+                        showToast("Update success!");
+                    }).addOnFailureListener(exception -> {
+                        showToast(exception.getMessage());
+                    });
 
             binding.textAddImage.setVisibility(View.GONE);
             binding.tableRoot.setVisibility(View.VISIBLE);
             binding.tableEdit.setVisibility(View.GONE);
+
+
         });
 
         binding.buttonBirthDate.setOnClickListener(view -> {
@@ -128,7 +151,7 @@ public class ProfileActivity extends AppCompatActivity {
                                     binding.buttonBirthDate.setText(date);
                                 }
                             }
-                            , date.getYear(), date.getMonth(), date.getDay());
+                            , date.getYear(), date.getMonth() - 1, date.getDay());
 
                     // Show the dialog
                     datePickerDialog.show();
@@ -145,6 +168,7 @@ public class ProfileActivity extends AppCompatActivity {
         byte[] bytes = byteArrayOutputStream.toByteArray();
         return Base64.encodeToString(bytes, Base64.DEFAULT);
     }
+
     private void showToast(String message) {
         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
     }

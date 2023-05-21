@@ -140,6 +140,7 @@ public class SignUpActivity extends AppCompatActivity {
         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
     }
 
+    // 7 attributes
     private void signUp() {
         loading(true);
         FirebaseFirestore database = FirebaseFirestore.getInstance();
@@ -148,7 +149,6 @@ public class SignUpActivity extends AppCompatActivity {
         user.put(Constants.KEY_EMAIL, binding.inputEmail.getText().toString());
         user.put(Constants.KEY_PASSWORD, binding.inputPassword.getText().toString());
         user.put(Constants.KEY_IMAGE, encodedImage);
-        user.put(Constants.KEY_EMAIL,binding.inputEmail.getText().toString());
         user.put(Constants.KEY_BIRTH_DATE, binding.buttonBirthDate.getText().toString());
         user.put(Constants.KEY_GENDER, getGender());
         user.put(Constants.KEY_PHONE_NUMBER,null);
