@@ -4,17 +4,23 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Base64;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.chat_app.activities.ReceiverInformationActivity;
 import com.example.chat_app.databinding.ItemContainerRecentConversionBinding;
 import com.example.chat_app.fragments.listeners.ConversionListener;
 import com.example.chat_app.models.ChatMessage;
 import com.example.chat_app.models.User;
+import com.example.chat_app.utilities.Constants;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.concurrent.Executor;
 
 public class RecentConversationsAdapter extends RecyclerView.Adapter<RecentConversationsAdapter.ConversionViewHolder>{
 
@@ -53,7 +59,14 @@ public class RecentConversationsAdapter extends RecyclerView.Adapter<RecentConve
         void setData(ChatMessage chatMessage){
             binding.imageProfile.setImageBitmap(getConversionImage(chatMessage.conversionImage));
             binding.textName.setText(chatMessage.conversionName);
-            binding.textRecentMessage.setText(chatMessage.message);
+            System.out.println(chatMessage.receiverId);
+            System.out.println(chatMessage.conversionId+"sua");
+            if(chatMessage.senderId.equals(chatMessage.conversionId)){
+                binding.textRecentMessage.setText("You: "+chatMessage.message);
+            }
+            else{
+                binding.textRecentMessage.setText(chatMessage.message);
+            }
             binding.getRoot().setOnClickListener(v -> {
                 User user = new User();
                 user.id = chatMessage.conversionId;

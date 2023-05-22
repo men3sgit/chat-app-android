@@ -15,7 +15,15 @@
         app:layout_constraintTop_toTopOf="parent"
         app:riv_oval="true"
         />
-
+    <TextView
+        android:id="@+id/activeStatus"
+        android:layout_width="@dimen/_10sdp"
+        android:layout_height="@dimen/_10sdp"
+        android:background="@drawable/background_status_active"
+        app:layout_constraintBottom_toBottomOf="@id/imageProfile"
+        app:layout_constraintEnd_toEndOf="@id/imageProfile"
+        android:visibility="gone"
+        />
     <View
         android:id="@+id/viewSupporter"
         android:layout_width="1dp"
