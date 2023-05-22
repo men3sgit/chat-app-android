@@ -18,6 +18,8 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+
 import com.example.chat_app.adapters.ChatAdapter;
 import com.example.chat_app.databinding.ActivityChatBinding;
 import com.example.chat_app.models.ChatMessage;
@@ -25,11 +27,13 @@ import com.example.chat_app.models.User;
 import com.example.chat_app.utilities.Constants;
 import com.example.chat_app.utilities.PreferenceManager;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 
@@ -130,7 +134,6 @@ public class ChatActivity extends BaseActivity {
         database.collection(Constants.KEY_COLLECTION_CHAT).whereEqualTo(Constants.KEY_SENDER_ID, receiverUser.id)
                 .whereEqualTo(Constants.KEY_RECEIVER_ID, preferenceManager.getString(Constants.KEY_USER_ID))
                 .addSnapshotListener(eventListener);
-
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -173,7 +176,6 @@ public class ChatActivity extends BaseActivity {
         receiverUser = (User) getIntent().getSerializableExtra(Constants.KEY_USER);
         binding.textName.setText(receiverUser.name);
     }
-
     @SuppressLint("ClickableViewAccessibility")
     private void setListeners(){
         binding.imageBack.setOnClickListener(view -> onBackPressed());
@@ -258,10 +260,7 @@ public class ChatActivity extends BaseActivity {
 //            Sendimage
         });
         binding.imageInfo.setOnClickListener(view -> {
-            Intent intent = new Intent(getApplicationContext(), ReceiverInformationActivity.class);
-            intent.putExtra(Constants.KEY_USER, receiverUser);
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(intent);
+            loadUserReceiverDetails();
         });
     }
 
@@ -312,7 +311,22 @@ public class ChatActivity extends BaseActivity {
 
     }
 
-
-
-
+    private void loadUserReceiverDetails(){
+        database.collection(Constants.KEY_COLLECTION_USERS).document(receiverUser.id).get().addOnCompleteListener(task -> {
+            if (task.isSuccessful() && task.getResult() != null) {
+                DocumentSnapshot document = task.getResult();
+                receiverUser.birthDate = document.getString(Constants.KEY_BIRTH_DATE);
+                receiverUser.gender = document.getString(Constants.KEY_GENDER);
+                receiverUser.email = document.getString(Constants.KEY_EMAIL);
+                receiverUser.phoneNumber = document.getString(Constants.KEY_PHONE_NUMBER);
+                Intent intent = new Intent(getApplicationContext(), ReceiverInformationActivity.class);
+                intent.putExtra(Constants.KEY_USER, receiverUser);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+            }
+            else{
+                showToast("Error");
+            }
+        });
+    }
 }
