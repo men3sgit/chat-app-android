@@ -74,17 +74,9 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
         }
 
         void setData(ChatMessage chatMessage){
-            if(chatMessage.type.equals(Constants.KEY_TEXT_MESS)) {
-                binding.textMessage.setText(chatMessage.message);
-            }
-            else if(chatMessage.type.equals(Constants.KEY_IMAGE)){
-                binding.textMessage.setVisibility(View.GONE);
-                binding.imageMessage.setVisibility(View.VISIBLE);
-                binding.imageMessage.setImageBitmap(renderingBitmap(chatMessage.message));
-            }
+            binding.textMessage.setText(chatMessage.message);
             binding.textDateTime.setText(chatMessage.dateTime);
         }
-
     }
 
     static class ReceivedMessageViewHolder extends RecyclerView.ViewHolder{
@@ -96,14 +88,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
         }
 
         void setData(ChatMessage chatMessage, Bitmap receivedMessage){
-            if(chatMessage.type.equals(Constants.KEY_TEXT_MESS)) {
-                binding.textMessage.setText(chatMessage.message);
-            }
-            else if(chatMessage.type.equals(Constants.KEY_IMAGE_MESS)){
-                binding.textMessage.setVisibility(View.GONE);
-                binding.imageMessage.setVisibility(View.VISIBLE);
-                binding.imageMessage.setImageBitmap(renderingBitmap(chatMessage.message));
-            }
+            binding.textMessage.setText(chatMessage.message);
             binding.textDateTime.setText(chatMessage.dateTime);
             binding.imageProfile.setImageBitmap(receivedMessage);
         }

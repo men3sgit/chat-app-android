@@ -71,11 +71,9 @@ public class MainActivity extends BaseActivity implements ConversionListener, Na
 
         binding.addNewChat.setOnClickListener(v ->
                 startActivity(new Intent(getApplicationContext(), UsersActivity.class)));
-
         binding.imageProfile.setOnClickListener(v -> {
             binding.drawerLayout.openDrawer(GravityCompat.START);
         });
-
         binding.imageProfile.setOnClickListener(v -> binding.drawerLayout.openDrawer(GravityCompat.START));
         binding.navigationView.setNavigationItemSelectedListener(this);
 
@@ -130,14 +128,12 @@ public class MainActivity extends BaseActivity implements ConversionListener, Na
                         chatMessage.conversionImage = documentChange.getDocument().getString(Constants.KEY_RECEIVER_IMAGE);
                         chatMessage.conversionName = documentChange.getDocument().getString(Constants.KEY_RECEIVER_NAME);
                         chatMessage.conversionId = documentChange.getDocument().getString(Constants.KEY_RECEIVER_ID);
-                        chatMessage.message = "You: " + documentChange.getDocument().getString(Constants.KEY_LAST_MESSAGE);
                     } else {
                         chatMessage.conversionImage = documentChange.getDocument().getString(Constants.KEY_SENDER_IMAGE);
                         chatMessage.conversionName = documentChange.getDocument().getString(Constants.KEY_SENDER_NAME);
                         chatMessage.conversionId = documentChange.getDocument().getString(Constants.KEY_SENDER_ID);
-                        chatMessage.message = documentChange.getDocument().getString(Constants.KEY_LAST_MESSAGE);
                     }
-
+                    chatMessage.message = documentChange.getDocument().getString(Constants.KEY_LAST_MESSAGE);
                     chatMessage.dateObject = documentChange.getDocument().getDate(Constants.KEY_TIMESTAMP);
                     conversations.add(chatMessage);
                 } else if (documentChange.getType() == DocumentChange.Type.MODIFIED) {
