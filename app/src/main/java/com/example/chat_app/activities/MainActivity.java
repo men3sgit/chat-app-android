@@ -265,9 +265,10 @@ public class MainActivity extends BaseActivity implements ConversionListener, Na
         super.onBackPressed();
     }
     @Override
-    protected void onDestroy(){
+    protected void onDestroy() {
         super.onDestroy();
         ZegoUIKitPrebuiltCallInvitationService.unInit();
+    }
       
     @Override
     protected void onResume() {
