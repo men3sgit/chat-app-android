@@ -38,7 +38,6 @@ import java.util.HashMap;
 
 
 public class ProfileActivity extends AppCompatActivity {
-    private static final String CHANNEL_ID = "Menes";
     private PreferenceManager preferenceManager;
     private ActivityProfileBinding binding;
 
