@@ -115,7 +115,7 @@ public class ChatActivity extends BaseActivity {
                     if(value != null){
                         if(value.getLong(Constants.KEY_AVAILABILITY) != null){
                             int availability = Objects.requireNonNull(value.getLong(Constants.KEY_AVAILABILITY)).intValue();
-                            isReceiverAvailable = (availability == 1);
+                            isReceiverAvailable = (availability == Constants.AVAILABILITY);
                         }
                         receiverUser.token = value.getString(Constants.KEY_FCM_TOKEN);
                     }
