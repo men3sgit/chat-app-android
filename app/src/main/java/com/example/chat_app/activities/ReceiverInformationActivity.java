@@ -14,7 +14,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Objects;
 
-public class ReceiverInformationActivity extends AppCompatActivity {
+public class ReceiverInformationActivity extends BaseActivity {
     User receiver;
     private Boolean isReceiverAvailable = false;
     private ActivityReceiverInformationBinding binding;

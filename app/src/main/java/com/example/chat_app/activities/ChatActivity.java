@@ -308,7 +308,6 @@ public class ChatActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
         listenerAvailabilityOfReceiver();
-
     }
 
     private void loadUserReceiverDetails(){

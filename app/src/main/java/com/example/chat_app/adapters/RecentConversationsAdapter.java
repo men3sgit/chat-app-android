@@ -59,14 +59,7 @@ public class RecentConversationsAdapter extends RecyclerView.Adapter<RecentConve
         void setData(ChatMessage chatMessage){
             binding.imageProfile.setImageBitmap(getConversionImage(chatMessage.conversionImage));
             binding.textName.setText(chatMessage.conversionName);
-            System.out.println(chatMessage.receiverId);
-            System.out.println(chatMessage.conversionId+"sua");
-            if(chatMessage.senderId.equals(chatMessage.conversionId)){
-                binding.textRecentMessage.setText("You: "+chatMessage.message);
-            }
-            else{
-                binding.textRecentMessage.setText(chatMessage.message);
-            }
+            binding.textRecentMessage.setText(chatMessage.message);
             binding.getRoot().setOnClickListener(v -> {
                 User user = new User();
                 user.id = chatMessage.conversionId;
