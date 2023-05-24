@@ -12,6 +12,7 @@ dependencyResolutionManagement {
         mavenCentral()
         jcenter()
         maven {url "https://jitpack.io"}
+        maven { url 'https://www.jitpack.io' } // <- Add this line.
     }
 }
 rootProject.name = "chat_app"

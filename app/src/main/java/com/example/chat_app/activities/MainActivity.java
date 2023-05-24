@@ -2,6 +2,7 @@ package com.example.chat_app.activities;
 
 
 import android.annotation.SuppressLint;
+import android.app.Application;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -30,6 +31,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.makeramen.roundedimageview.RoundedImageView;
+import com.zegocloud.uikit.prebuilt.call.config.ZegoNotificationConfig;
+import com.zegocloud.uikit.prebuilt.call.invite.ZegoUIKitPrebuiltCallInvitationConfig;
+import com.zegocloud.uikit.prebuilt.call.invite.ZegoUIKitPrebuiltCallInvitationService;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -55,6 +59,7 @@ public class MainActivity extends BaseActivity implements ConversionListener, Na
         setListeners();
         init();
         listenConversations();
+        startService();
     }
 
     private void init() {
@@ -63,8 +68,6 @@ public class MainActivity extends BaseActivity implements ConversionListener, Na
         binding.conversationRecyclerView.setAdapter(conversationsAdapter);
         database = FirebaseFirestore.getInstance();
         binding.navigationView.setItemIconTintList(null);
-
-
     }
 
     private void setListeners() {
@@ -160,6 +163,23 @@ public class MainActivity extends BaseActivity implements ConversionListener, Na
         FirebaseMessaging.getInstance().getToken().addOnSuccessListener(this::updateToken);
     }
 
+    private void startService(){
+        Application application = getApplication(); // Android's application context
+        long appID = 1894952940;   // yourAppID
+        String appSign = "dd7df66ad4f55234f57caa1954d8ab61fb31005e79bc4867217f005b22ff90b0";  // yourAppSign
+        String userID = preferenceManager.getString(Constants.KEY_EMAIL); // yourUserID, userID should only contain numbers, English characters, and '_'.
+        String userName = preferenceManager.getString(Constants.KEY_NAME);   // yourUserName
+
+
+        ZegoUIKitPrebuiltCallInvitationConfig callInvitationConfig = new ZegoUIKitPrebuiltCallInvitationConfig();
+        callInvitationConfig.notifyWhenAppRunningInBackgroundOrQuit = true;
+        ZegoNotificationConfig notificationConfig = new ZegoNotificationConfig();
+        notificationConfig.sound = "zego_uikit_sound_call";
+        notificationConfig.channelID = "CallInvitation";
+        notificationConfig.channelName = "CallInvitation";
+        ZegoUIKitPrebuiltCallInvitationService.init(getApplication(), appID, appSign, userID, userName,callInvitationConfig);
+    }
+
     private void updateToken(String token) {
         preferenceManager.putString(Constants.KEY_FCM_TOKEN, token);
         FirebaseFirestore database = FirebaseFirestore.getInstance();
@@ -244,7 +264,11 @@ public class MainActivity extends BaseActivity implements ConversionListener, Na
         }
         super.onBackPressed();
     }
-
+    @Override
+    protected void onDestroy(){
+        super.onDestroy();
+        ZegoUIKitPrebuiltCallInvitationService.unInit();
+      
     @Override
     protected void onResume() {
         super.onResume();
