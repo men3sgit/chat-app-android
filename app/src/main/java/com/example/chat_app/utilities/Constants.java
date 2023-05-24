@@ -33,8 +33,6 @@ public class Constants {
     public static final String REMOTE_MSG_CONTENT_TYPE = "Content-Type";
     public static final String REMOTE_MSG_DATA = "data";
     public static final String REMOTE_MSG_REGISTRATION_IDS = "registration_ids";
-    public static final String KEY_TEXT_MESS = "text";
-    public static final String KEY_IMAGE_MESS = "image";
     public static final String KEY_NO_DATA = "No data";
     public static final int AVAILABILITY = 1;
     public static final int UNAVAILABILITY = 0;
