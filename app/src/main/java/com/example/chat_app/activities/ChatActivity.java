@@ -20,6 +20,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
+import com.example.chat_app.R;
 import com.example.chat_app.adapters.ChatAdapter;
 import com.example.chat_app.databinding.ActivityChatBinding;
 import com.example.chat_app.models.ChatMessage;
@@ -37,6 +38,8 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.zegocloud.uikit.prebuilt.call.invite.widget.ZegoSendCallInvitationButton;
+import com.zegocloud.uikit.service.defines.ZegoUIKitUser;
 
 
 import org.json.JSONArray;
@@ -45,6 +48,7 @@ import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
@@ -68,14 +72,15 @@ public class ChatActivity extends BaseActivity {
     private String conversionId = null;
     private Boolean isReceiverAvailable = false;
     private static final int IMAGE_PICKER_REQUEST = 1;
+    private ZegoSendCallInvitationButton voiceCallBtn, videoCallBtn;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityChatBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         loadReceiverDetails();
-        setListeners();
         init();
+        setListeners();
         listenMessage();
     }
 
@@ -85,6 +90,22 @@ public class ChatActivity extends BaseActivity {
         chatAdapter = new ChatAdapter(getBitmapFromEncodedString(receiverUser.image),chatMessages, preferenceManager.getString(Constants.KEY_USER_ID));
         binding.chatRecyclerView.setAdapter(chatAdapter);
         database = FirebaseFirestore.getInstance();
+        voiceCallBtn = findViewById(R.id.imageCall);
+        videoCallBtn = findViewById(R.id.imageVideoCall);
+        database.collection(Constants.KEY_COLLECTION_USERS).document(receiverUser.id).get().addOnCompleteListener(task -> {
+            if (task.isSuccessful() && task.getResult() != null) {
+                DocumentSnapshot document = task.getResult();
+                receiverUser.birthDate = document.getString(Constants.KEY_BIRTH_DATE);
+                receiverUser.gender = document.getString(Constants.KEY_GENDER);
+                receiverUser.email = document.getString(Constants.KEY_EMAIL);
+                receiverUser.phoneNumber = document.getString(Constants.KEY_PHONE_NUMBER);
+                setVoiceCall();
+                setVideoCall();
+            }
+            else{
+                showToast("Error");
+            }
+        });
     }
 
     private void sendMessage(){
@@ -182,6 +203,8 @@ public class ChatActivity extends BaseActivity {
                             isReceiverAvailable = (availability == 1);
                         }
                         receiverUser.token = value.getString(Constants.KEY_FCM_TOKEN);
+                        setVideoCall();
+                        setVoiceCall();
                         if(receiverUser.image != null){
                             receiverUser.image = value.getString(Constants.KEY_IMAGE);
                             chatAdapter.setReceiverProfileImage(getBitmapFromEncodedString(receiverUser.image));
@@ -247,6 +270,7 @@ public class ChatActivity extends BaseActivity {
     private void loadReceiverDetails(){
         receiverUser = (User) getIntent().getSerializableExtra(Constants.KEY_USER);
         binding.textName.setText(receiverUser.name);
+
     }
     @SuppressLint("ClickableViewAccessibility")
     private void setListeners(){
@@ -332,8 +356,13 @@ public class ChatActivity extends BaseActivity {
 //            Sendimage
         });
         binding.imageInfo.setOnClickListener(view -> {
-            loadUserReceiverDetails();
+            Intent intent = new Intent(getApplicationContext(), ReceiverInformationActivity.class);
+            intent.putExtra(Constants.KEY_USER, receiverUser);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
         });
+
+
     }
 
 
@@ -382,22 +411,16 @@ public class ChatActivity extends BaseActivity {
         listenerAvailabilityOfReceiver();
     }
 
-    private void loadUserReceiverDetails(){
-        database.collection(Constants.KEY_COLLECTION_USERS).document(receiverUser.id).get().addOnCompleteListener(task -> {
-            if (task.isSuccessful() && task.getResult() != null) {
-                DocumentSnapshot document = task.getResult();
-                receiverUser.birthDate = document.getString(Constants.KEY_BIRTH_DATE);
-                receiverUser.gender = document.getString(Constants.KEY_GENDER);
-                receiverUser.email = document.getString(Constants.KEY_EMAIL);
-                receiverUser.phoneNumber = document.getString(Constants.KEY_PHONE_NUMBER);
-                Intent intent = new Intent(getApplicationContext(), ReceiverInformationActivity.class);
-                intent.putExtra(Constants.KEY_USER, receiverUser);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
-            }
-            else{
-                showToast("Error");
-            }
-        });
+    private void setVoiceCall(){
+        voiceCallBtn.setIsVideoCall(false);
+        voiceCallBtn.setResourceID("zego_uikit_call");
+        voiceCallBtn.setTimeout(30);
+        voiceCallBtn.setInvitees(Collections.singletonList(new ZegoUIKitUser(receiverUser.email, receiverUser.name)));
+    }
+    private void setVideoCall(){
+        videoCallBtn.setIsVideoCall(true);
+        videoCallBtn.setResourceID("zego_uikit_call");
+        voiceCallBtn.setTimeout(30);
+        videoCallBtn.setInvitees(Collections.singletonList(new ZegoUIKitUser(receiverUser.email, receiverUser.name)));
     }
 }
