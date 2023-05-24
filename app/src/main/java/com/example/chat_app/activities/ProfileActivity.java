@@ -28,7 +28,7 @@ import java.util.HashMap;
 // add image
 // update firebase
 
-public class ProfileActivity extends AppCompatActivity {
+public class ProfileActivity extends BaseActivity {
     private PreferenceManager preferenceManager;
     private ActivityProfileBinding binding;
 
