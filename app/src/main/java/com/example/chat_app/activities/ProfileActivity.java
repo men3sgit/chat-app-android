@@ -3,12 +3,14 @@ package com.example.chat_app.activities;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Base64;
 import android.view.View;
 import android.widget.DatePicker;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.Toast;
 
@@ -57,6 +59,14 @@ public class ProfileActivity extends BaseActivity {
 
     private void setListeners() {
         binding.buttonBackToMain.setOnClickListener(view -> finish());
+        binding.imageProfile.setOnClickListener(view -> {
+            Dialog dialog = new Dialog(ProfileActivity.this);
+            dialog.setContentView(R.layout.custom_dialog_image);
+            ImageView imageView = dialog.findViewById(R.id.image);
+            int imageResource = R.drawable.phg2;
+            imageView.setImageResource(imageResource);
+            dialog.show();
+        });
         binding.buttonEdit.setOnClickListener(view -> {
             if (binding.tableEdit.getVisibility() == View.VISIBLE) {
                 return;
