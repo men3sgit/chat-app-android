@@ -244,4 +244,10 @@ public class MainActivity extends BaseActivity implements ConversionListener, Na
         }
         super.onBackPressed();
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        loadUserDetails();
+    }
 }
