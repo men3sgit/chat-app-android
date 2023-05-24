@@ -2,7 +2,12 @@ package com.example.chat_app.activities;
 
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -10,6 +15,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.core.view.GravityCompat;
 
 import com.example.chat_app.R;
@@ -17,6 +24,7 @@ import com.example.chat_app.adapters.RecentConversationsAdapter;
 import com.example.chat_app.databinding.ActivityMainBinding;
 import com.example.chat_app.fragments.listeners.ConversionListener;
 import com.example.chat_app.models.ChatMessage;
+import com.example.chat_app.models.Updatable;
 import com.example.chat_app.models.User;
 import com.example.chat_app.utilities.Constants;
 import com.example.chat_app.utilities.PreferenceManager;
@@ -31,17 +39,23 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.makeramen.roundedimageview.RoundedImageView;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class MainActivity extends BaseActivity implements ConversionListener, NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends BaseActivity implements ConversionListener, NavigationView.OnNavigationItemSelectedListener, Serializable {
+    private static final String CHANNEL_ID = "MyChannel";
     private ActivityMainBinding binding;
+    private static final int REQUEST_CODE = 1;
     private PreferenceManager preferenceManager;
     private List<ChatMessage> conversations;
     private RecentConversationsAdapter conversationsAdapter;
     private FirebaseFirestore database;
     private static int CURRENT_FRAGMENT = R.id.menuProfile;
+    private NotificationManagerCompat notificationManagerCompat;
+    private static int notificationId = 0;
+    private Notification notification;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +69,7 @@ public class MainActivity extends BaseActivity implements ConversionListener, Na
         setListeners();
         init();
         listenConversations();
+        setNotifications();
     }
 
     private void init() {
@@ -191,13 +206,11 @@ public class MainActivity extends BaseActivity implements ConversionListener, Na
         Intent intent = new Intent(getApplicationContext(), ChatActivity.class);
         intent.putExtra(Constants.KEY_USER, user);
         startActivity(intent);
-
     }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
-
         switch (id) {
             case R.id.menuProfile:
                 Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
@@ -207,7 +220,8 @@ public class MainActivity extends BaseActivity implements ConversionListener, Na
                 intent.putExtra(Constants.KEY_BIRTH_DATE, preferenceManager.getString(Constants.KEY_BIRTH_DATE));
                 intent.putExtra(Constants.KEY_GENDER, preferenceManager.getString(Constants.KEY_GENDER));
                 intent.putExtra(Constants.KEY_PHONE_NUMBER, preferenceManager.getString(Constants.KEY_PHONE_NUMBER));
-                startActivity(intent);
+
+                startActivityForResult(intent, REQUEST_CODE);
 //                replaceFragment(FragmentFactory.createFragment(FragmentType.PROFILE), id);
                 break;
 //            case R.id.menuNotification:
@@ -219,9 +233,10 @@ public class MainActivity extends BaseActivity implements ConversionListener, Na
             case R.id.menuHome:
                 binding.drawerLayout.closeDrawer(GravityCompat.START);
                 break;
-//            case R.id.menuSetting:
+            case R.id.menuSetting:
 //                replaceFragment(FragmentFactory.createFragment(FragmentType.SETTING), id);
-//                break;
+                pushNotifications();
+                break;
 //            case R.id.menuShare:
 //                replaceFragment(FragmentFactory.createFragment(FragmentType.SHARE), id);
 //                break;
@@ -248,4 +263,35 @@ public class MainActivity extends BaseActivity implements ConversionListener, Na
         }
         super.onBackPressed();
     }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        loadUserDetails();
+    }
+
+    public void setNotifications() {
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is not in the Support Library.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, "My Channel", importance);
+            // Register the channel with the system. You can't change the importance
+            // or other notification behaviors after this.
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID);
+        builder.setContentText("This is Menes's message " + notificationId).setSmallIcon(R.mipmap.ic_launcher)
+                .setContentTitle("First Notification");
+        notification = builder.build();
+        notificationManagerCompat = NotificationManagerCompat.from(this);
+    }
+
+    public void pushNotifications() {
+        notificationManagerCompat.notify(++notificationId, notification);
+    }
+
+
 }

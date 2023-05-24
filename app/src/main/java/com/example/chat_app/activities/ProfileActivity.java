@@ -1,20 +1,29 @@
 package com.example.chat_app.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
 
+import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.DatePickerDialog;
+import android.app.Dialog;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Base64;
 import android.view.View;
 import android.widget.DatePicker;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.Toast;
 
 import com.example.chat_app.R;
 import com.example.chat_app.databinding.ActivityProfileBinding;
 import com.example.chat_app.models.Gender;
+import com.example.chat_app.models.Updatable;
 import com.example.chat_app.utilities.Constants;
 import com.example.chat_app.utilities.DateAdapter;
 import com.example.chat_app.utilities.PreferenceManager;
@@ -26,9 +35,10 @@ import java.util.Calendar;
 import java.util.HashMap;
 
 // add image
-// update firebase
+
 
 public class ProfileActivity extends AppCompatActivity {
+    private static final String CHANNEL_ID = "Menes";
     private PreferenceManager preferenceManager;
     private ActivityProfileBinding binding;
 
@@ -56,7 +66,19 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void setListeners() {
-        binding.buttonBackToMain.setOnClickListener(view -> finish());
+        binding.buttonBackToMain.setOnClickListener(view -> {
+//            Intent returnIntent = new Intent();
+//            setResult(RESULT_OK, returnIntent);
+            finish();
+        });
+        binding.imageProfile.setOnClickListener(view -> {
+            Dialog dialog = new Dialog(ProfileActivity.this);
+            dialog.setContentView(R.layout.custom_dialog_image);
+            ImageView imageView = dialog.findViewById(R.id.image);
+            int imageResource = R.drawable.phg2;
+            imageView.setImageResource(imageResource);
+            dialog.show();
+        });
         binding.buttonEdit.setOnClickListener(view -> {
             if (binding.tableEdit.getVisibility() == View.VISIBLE) {
                 return;
@@ -172,5 +194,7 @@ public class ProfileActivity extends AppCompatActivity {
     private void showToast(String message) {
         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
     }
+
+
 }
 
