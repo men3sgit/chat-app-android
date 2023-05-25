@@ -43,6 +43,28 @@
         app:layout_constraintBottom_toTopOf="@id/textDateTime"
 
         app:layout_constraintWidth_percent="0.75"/>
+    <com.makeramen.roundedimageview.RoundedImageView
+        android:id="@+id/imageMessage"
+        android:layout_width="@dimen/_200sdp"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        android:paddingStart="@dimen/_8sdp"
+        android:src="@drawable/ic_image"
+        app:layout_constraintStart_toEndOf="@id/imageProfile"
+        app:layout_constraintBottom_toTopOf="@id/textDateTime"
+        app:riv_corner_radius="@dimen/_16sdp"
+        android:visibility="gone"
+        />
+    <com.google.android.exoplayer2.ui.PlayerView
+        android:id="@+id/imageVideo"
+        android:layout_width="@dimen/_220sdp"
+        android:layout_height="@dimen/_160sdp"
+        android:paddingStart="@dimen/_8sdp"
+        android:background="@color/black"
+        app:layout_constraintStart_toEndOf="@id/imageProfile"
+        app:layout_constraintBottom_toTopOf="@id/textDateTime"
+        android:visibility="gone"
+ />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
