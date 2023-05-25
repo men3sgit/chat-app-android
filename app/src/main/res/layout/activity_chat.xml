@@ -53,29 +53,29 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         />
-    <com.zegocloud.uikit.prebuilt.call.invite.widget.ZegoSendCallInvitationButton
-        android:id="@+id/imageCall"
-        android:layout_width="@dimen/_30sdp"
-        android:layout_height="@dimen/_30sdp"
-        android:layout_marginEnd="@dimen/_28sdp"
-        android:layout_marginRight="@dimen/_16sdp"
-        android:layout_marginTop="@dimen/_12sdp"
-        android:padding="@dimen/_5sdp"
-        app:layout_constraintEnd_toEndOf="@id/imageInfo"
-        app:layout_constraintTop_toTopOf="parent"
-        />
+<!--    <com.zegocloud.uikit.prebuilt.call.invite.widget.ZegoSendCallInvitationButton-->
+<!--        android:id="@+id/imageCall"-->
+<!--        android:layout_width="@dimen/_30sdp"-->
+<!--        android:layout_height="@dimen/_30sdp"-->
+<!--        android:layout_marginEnd="@dimen/_28sdp"-->
+<!--        android:layout_marginRight="@dimen/_16sdp"-->
+<!--        android:layout_marginTop="@dimen/_12sdp"-->
+<!--        android:padding="@dimen/_5sdp"-->
+<!--        app:layout_constraintEnd_toEndOf="@id/imageInfo"-->
+<!--        app:layout_constraintTop_toTopOf="parent"-->
+<!--        />-->
 
-    <com.zegocloud.uikit.prebuilt.call.invite.widget.ZegoSendCallInvitationButton
-        android:id="@+id/imageVideoCall"
-        android:layout_width="@dimen/_30sdp"
-        android:layout_height="@dimen/_30sdp"
-        android:layout_marginEnd="@dimen/_28sdp"
-        android:layout_marginRight="@dimen/_16sdp"
-        android:layout_marginTop="@dimen/_12sdp"
-        android:padding="@dimen/_5sdp"
-        app:layout_constraintEnd_toEndOf="@id/imageCall"
-        app:layout_constraintTop_toTopOf="parent"
-        />
+<!--    <com.zegocloud.uikit.prebuilt.call.invite.widget.ZegoSendCallInvitationButton-->
+<!--        android:id="@+id/imageVideoCall"-->
+<!--        android:layout_width="@dimen/_30sdp"-->
+<!--        android:layout_height="@dimen/_30sdp"-->
+<!--        android:layout_marginEnd="@dimen/_28sdp"-->
+<!--        android:layout_marginRight="@dimen/_16sdp"-->
+<!--        android:layout_marginTop="@dimen/_12sdp"-->
+<!--        android:padding="@dimen/_5sdp"-->
+<!--        app:layout_constraintEnd_toEndOf="@id/imageCall"-->
+<!--        app:layout_constraintTop_toTopOf="parent"-->
+<!--        />-->
     <TextView
         android:id="@+id/textName"
         android:layout_width="0dp"
@@ -89,9 +89,10 @@
         android:textSize="@dimen/_14ssp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@id/imageBack"
-        app:layout_constraintEnd_toStartOf="@id/imageVideoCall"
         app:layout_constraintStart_toEndOf="@id/imageBack"
         app:layout_constraintTop_toTopOf="@id/imageBack"/>
+<!--    app:layout_constraintEnd_toStartOf="@id/imageVideoCall"-->
+
 
     <View
         android:id="@+id/viewSupporter"

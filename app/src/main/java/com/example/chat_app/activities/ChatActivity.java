@@ -44,6 +44,8 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+
+
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.karumi.dexter.Dexter;
@@ -53,6 +55,7 @@ import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.zegocloud.uikit.prebuilt.call.invite.widget.ZegoSendCallInvitationButton;
 import com.zegocloud.uikit.service.defines.ZegoUIKitUser;
+
 
 
 import org.json.JSONArray;
@@ -91,7 +94,7 @@ public class ChatActivity extends BaseActivity {
     private String conversionId = null;
     private Boolean isReceiverAvailable = false;
     private static final int IMAGE_PICKER_REQUEST = 1;
-    private ZegoSendCallInvitationButton voiceCallBtn, videoCallBtn;
+   private ZegoSendCallInvitationButton voiceCallBtn, videoCallBtn;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -109,9 +112,11 @@ public class ChatActivity extends BaseActivity {
         chatAdapter = new ChatAdapter(getBitmapFromEncodedString(receiverUser.image),chatMessages, preferenceManager.getString(Constants.KEY_USER_ID), getApplication());
         binding.chatRecyclerView.setAdapter(chatAdapter);
         database = FirebaseFirestore.getInstance();
+
         databaseStore = FirebaseStorage.getInstance();
         voiceCallBtn = findViewById(R.id.imageCall);
         videoCallBtn = findViewById(R.id.imageVideoCall);
+
         database.collection(Constants.KEY_COLLECTION_USERS).document(receiverUser.id).get().addOnCompleteListener(task -> {
             if (task.isSuccessful() && task.getResult() != null) {
                 DocumentSnapshot document = task.getResult();
@@ -404,16 +409,16 @@ public class ChatActivity extends BaseActivity {
     }
 
     private void setVoiceCall(){
-        voiceCallBtn.setIsVideoCall(false);
-        voiceCallBtn.setResourceID("zego_uikit_call");
-        voiceCallBtn.setTimeout(30);
-        voiceCallBtn.setInvitees(Collections.singletonList(new ZegoUIKitUser(receiverUser.email, receiverUser.name)));
+       voiceCallBtn.setIsVideoCall(false);
+       voiceCallBtn.setResourceID("zego_uikit_call");
+       voiceCallBtn.setTimeout(30);
+       voiceCallBtn.setInvitees(Collections.singletonList(new ZegoUIKitUser(receiverUser.email, receiverUser.name)));
     }
     private void setVideoCall(){
-        videoCallBtn.setIsVideoCall(true);
-        videoCallBtn.setResourceID("zego_uikit_call");
-        voiceCallBtn.setTimeout(30);
-        videoCallBtn.setInvitees(Collections.singletonList(new ZegoUIKitUser(receiverUser.email, receiverUser.name)));
+       videoCallBtn.setIsVideoCall(true);
+       videoCallBtn.setResourceID("zego_uikit_call");
+       voiceCallBtn.setTimeout(30);
+       videoCallBtn.setInvitees(Collections.singletonList(new ZegoUIKitUser(receiverUser.email, receiverUser.name)));
     }
 
 
