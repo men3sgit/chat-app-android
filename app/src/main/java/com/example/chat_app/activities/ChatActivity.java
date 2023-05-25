@@ -1,15 +1,19 @@
 package com.example.chat_app.activities;
 
 
+import static android.content.ContentValues.TAG;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Base64;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -23,6 +27,7 @@ import androidx.annotation.NonNull;
 import com.example.chat_app.R;
 import com.example.chat_app.adapters.ChatAdapter;
 import com.example.chat_app.databinding.ActivityChatBinding;
+import com.example.chat_app.databinding.SelectSendExtendBinding;
 import com.example.chat_app.models.ChatMessage;
 import com.example.chat_app.models.User;
 import com.example.chat_app.network.ApiClient;
@@ -31,6 +36,7 @@ import com.example.chat_app.utilities.Constants;
 import com.example.chat_app.utilities.PreferenceManager;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -38,6 +44,13 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.MultiplePermissionsReport;
+import com.karumi.dexter.PermissionToken;
+import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.zegocloud.uikit.prebuilt.call.invite.widget.ZegoSendCallInvitationButton;
 import com.zegocloud.uikit.service.defines.ZegoUIKitUser;
 
@@ -55,10 +68,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.UUID;
 
+import gun0912.tedbottompicker.TedBottomPicker;
+import gun0912.tedbottompicker.TedBottomSheetDialogFragment;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import android.Manifest;
 
 
 public class ChatActivity extends BaseActivity {
@@ -69,6 +87,7 @@ public class ChatActivity extends BaseActivity {
     private ChatAdapter chatAdapter;
     private PreferenceManager preferenceManager;
     private FirebaseFirestore database;
+    private FirebaseStorage databaseStore;
     private String conversionId = null;
     private Boolean isReceiverAvailable = false;
     private static final int IMAGE_PICKER_REQUEST = 1;
@@ -87,9 +106,10 @@ public class ChatActivity extends BaseActivity {
     private void init(){
         preferenceManager = new PreferenceManager(getApplicationContext());
         chatMessages = new ArrayList<>();
-        chatAdapter = new ChatAdapter(getBitmapFromEncodedString(receiverUser.image),chatMessages, preferenceManager.getString(Constants.KEY_USER_ID));
+        chatAdapter = new ChatAdapter(getBitmapFromEncodedString(receiverUser.image),chatMessages, preferenceManager.getString(Constants.KEY_USER_ID), getApplication());
         binding.chatRecyclerView.setAdapter(chatAdapter);
         database = FirebaseFirestore.getInstance();
+        databaseStore = FirebaseStorage.getInstance();
         voiceCallBtn = findViewById(R.id.imageCall);
         videoCallBtn = findViewById(R.id.imageVideoCall);
         database.collection(Constants.KEY_COLLECTION_USERS).document(receiverUser.id).get().addOnCompleteListener(task -> {
@@ -112,6 +132,7 @@ public class ChatActivity extends BaseActivity {
         HashMap<String, Object> message = new HashMap<>();
         message.put(Constants.KEY_SENDER_ID, preferenceManager.getString(Constants.KEY_USER_ID));
         message.put(Constants.KEY_RECEIVER_ID, receiverUser.id);
+        message.put(Constants.KEY_TYPE, Constants.KEY_TEXT_MESS);
         message.put(Constants.KEY_MESSAGE, binding.inputMessage.getText().toString());
         message.put(Constants.KEY_TIMESTAMP, new Date());
         database.collection(Constants.KEY_COLLECTION_CHAT).add(message);
@@ -238,6 +259,7 @@ public class ChatActivity extends BaseActivity {
                     ChatMessage chatMessage = new ChatMessage();
                     chatMessage.senderId = documentChange.getDocument().getString(Constants.KEY_SENDER_ID);
                     chatMessage.receiverId = documentChange.getDocument().getString(Constants.KEY_RECEIVER_ID);
+                    chatMessage.type = documentChange.getDocument().getString(Constants.KEY_TYPE);
                     chatMessage.message = documentChange.getDocument().getString(Constants.KEY_MESSAGE);
                     chatMessage.dateTime = getReadableDateTime(documentChange.getDocument().getDate(Constants.KEY_TIMESTAMP));
                     chatMessage.dateObject = documentChange.getDocument().getDate(Constants.KEY_TIMESTAMP);
@@ -275,21 +297,6 @@ public class ChatActivity extends BaseActivity {
     @SuppressLint("ClickableViewAccessibility")
     private void setListeners(){
         binding.imageBack.setOnClickListener(view -> onBackPressed());
-        binding.inputMessage.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus) {
-                    // Xử lý sự kiện khi người dùng chọn vào EditText
-                    binding.layoutImage.setVisibility(View.GONE);
-                    binding.layoutMic.setVisibility(View.GONE);
-                    binding.layoutExtend.setVisibility(View.VISIBLE);
-
-                } else {
-                    // Xử lý sự kiện khi người dùng chuyển sang EditText khác
-                }
-            }
-        });
-
 
         //ẩn bàn phím khi ấn ngoài inputmessage
         binding.chatRecyclerView.setOnTouchListener(new View.OnTouchListener() {
@@ -319,42 +326,27 @@ public class ChatActivity extends BaseActivity {
             }
         });
 
-        //Ẩn tiện ích khi soạn thảo văn bản
-        binding.inputMessage.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                // Không cần xử lý
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                // Xử lý sự kiện khi người dùng nhập liệu và thay đổi text
-                binding.layoutImage.setVisibility(View.GONE);
-                binding.layoutMic.setVisibility(View.GONE);
-                binding.layoutExtend.setVisibility(View.VISIBLE);
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                // Không cần xử lý
-            }
-        });
-
-
-        binding.layoutExtend.setOnClickListener(view -> {
-            binding.layoutExtend.setVisibility(View.INVISIBLE);
-            binding.layoutMic.setVisibility(View.VISIBLE);
-            binding.layoutImage.setVisibility(View.VISIBLE);
-        });
         binding.layoutSend.setOnClickListener(view -> {
             if(!binding.inputMessage.getText().toString().isEmpty()) {
                 sendMessage();
             }
         });
-
-        binding.layoutImage.setOnClickListener(view -> {
-//            Sendimage
+        binding.layoutMore.setOnClickListener(v -> {
+            BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(ChatActivity.this);
+            SelectSendExtendBinding selectSendExtendBinding = SelectSendExtendBinding.inflate(getLayoutInflater());
+            bottomSheetDialog.setContentView(selectSendExtendBinding.getRoot());
+            bottomSheetDialog.show();
+            selectSendExtendBinding.sendImage.setOnClickListener(view -> {
+                requestPermissionImages();
+            });
+            selectSendExtendBinding.sendVideo.setOnClickListener(view -> {
+                requestPermissionVideo();
+            });
+            selectSendExtendBinding.Record.setOnClickListener(view -> {
+                //Record
+            });
         });
+
         binding.imageInfo.setOnClickListener(view -> {
             Intent intent = new Intent(getApplicationContext(), ReceiverInformationActivity.class);
             intent.putExtra(Constants.KEY_USER, receiverUser);
@@ -422,5 +414,186 @@ public class ChatActivity extends BaseActivity {
         videoCallBtn.setResourceID("zego_uikit_call");
         voiceCallBtn.setTimeout(30);
         videoCallBtn.setInvitees(Collections.singletonList(new ZegoUIKitUser(receiverUser.email, receiverUser.name)));
+    }
+
+
+    //image
+    private void requestPermissionImages(){
+        Dexter.withActivity(this)
+                .withPermissions(
+                        Manifest.permission.READ_EXTERNAL_STORAGE,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                        Manifest.permission.CAMERA
+                )
+                .withListener(new MultiplePermissionsListener() {
+                    @Override
+                    public void onPermissionsChecked(MultiplePermissionsReport report) {
+                        if (report.areAllPermissionsGranted()) {
+                            openBottomPickerImages();
+                        } else {
+                            Toast.makeText(ChatActivity.this, "Bạn chưa cấp quyền truy cập.", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
+                        token.continuePermissionRequest();
+                    }
+                })
+                .check();
+    }
+
+    private void openBottomPickerImages(){
+        List<Uri> selectedUriList = new ArrayList<>();
+        TedBottomPicker.with(ChatActivity.this)
+                .setPeekHeight(800)
+                .showTitle(false)
+                .setSelectMinCount(1)
+                .setSelectMinCountErrorText("Please choose a photo to send")
+                .setSelectMaxCount(9)
+                .setSelectMaxCountErrorText("select up to 9 photos")
+                .setCompleteButtonText("Send")
+                .setEmptySelectionText("No Select")
+                .setSelectedUriList(selectedUriList)
+                .showMultiImage(new TedBottomSheetDialogFragment.OnMultiImageSelectedListener() {
+                    @Override
+                    public void onImagesSelected(List<Uri> uriList) {
+                        if(uriList!=null && !uriList.isEmpty()) {
+                            sendImage(uriList);
+                        }
+                    }
+                });
+    }
+    private String getNameFile(Uri uri){
+        String path = uri.getPath();
+        int index = path.lastIndexOf('/');
+        return path.substring(index + 1);
+    }
+    private void sendImage(List<Uri> uriList) {
+        for (Uri uri : uriList) {
+            // Tạo tham chiếu đến vị trí lưu trữ của Firebase Storage
+            StorageReference storageRef = databaseStore.getReference().child("images/" + getNameFile(uri));
+            // Upload ảnh lên Firebase Storage
+            storageRef.putFile(uri)
+                    .addOnSuccessListener(taskSnapshot -> {
+                        // Xử lý khi upload thành công
+                        showToast("Send Image success!");
+//                        Log.d(TAG, "Upload success: " + taskSnapshot.getMetadata().getPath());
+                        HashMap<String, Object> message = new HashMap<>();
+                        message.put(Constants.KEY_SENDER_ID, preferenceManager.getString(Constants.KEY_USER_ID));
+                        message.put(Constants.KEY_RECEIVER_ID, receiverUser.id);
+                        message.put(Constants.KEY_TYPE, Constants.KEY_IMAGE);
+                        message.put(Constants.KEY_MESSAGE, "images/" + getNameFile(uri));
+                        message.put(Constants.KEY_TIMESTAMP, new Date());
+                        database.collection(Constants.KEY_COLLECTION_CHAT).add(message);
+                        if(conversionId!=null){
+                            updateConversion("Sent pictures");
+                        }
+                        else{
+                            HashMap<String, Object> conversion = new HashMap<>();
+                            conversion.put(Constants.KEY_SENDER_ID, preferenceManager.getString(Constants.KEY_USER_ID));
+                            conversion.put(Constants.KEY_SENDER_NAME, preferenceManager.getString(Constants.KEY_NAME));
+                            conversion.put(Constants.KEY_SENDER_IMAGE, preferenceManager.getString(Constants.KEY_IMAGE));
+                            conversion.put(Constants.KEY_RECEIVER_ID, receiverUser.id);
+                            conversion.put(Constants.KEY_RECEIVER_NAME, receiverUser.name);
+                            conversion.put(Constants.KEY_RECEIVER_IMAGE, receiverUser.image);
+                            conversion.put(Constants.KEY_LAST_MESSAGE, "Sent pictures");
+                            conversion.put(Constants.KEY_TIMESTAMP, new Date());
+                            addConversion(conversion);
+                        }
+                    })
+                    .addOnFailureListener(exception -> {
+                        showToast("Send Image Failed!!");
+                    });
+
+        }
+
+    }
+    //video
+    private void requestPermissionVideo(){
+        Dexter.withActivity(this)
+                .withPermissions(
+                        Manifest.permission.READ_EXTERNAL_STORAGE,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                        Manifest.permission.CAMERA
+                )
+                .withListener(new MultiplePermissionsListener() {
+                    @Override
+                    public void onPermissionsChecked(MultiplePermissionsReport report) {
+                        if (report.areAllPermissionsGranted()) {
+                            openBottomPickerVideo();
+                        } else {
+                            Toast.makeText(ChatActivity.this, "Bạn chưa cấp quyền truy cập.", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
+                        token.continuePermissionRequest();
+                    }
+                })
+                .check();
+    }
+
+    private void openBottomPickerVideo(){
+        List<Uri> selectedUriList = new ArrayList<>();
+        TedBottomPicker.with(ChatActivity.this)
+                .showVideoMedia()
+                .setPeekHeight(800)
+                .showTitle(false)
+                .setSelectMinCount(1)
+                .setSelectMinCountErrorText("Please choose a video to send")
+                .setSelectMaxCount(1)
+                .setSelectMaxCountErrorText("select up to 1 video")
+                .setCompleteButtonText("Send")
+                .setEmptySelectionText("No Select")
+                .setSelectedUriList(selectedUriList)
+                .showMultiImage(new TedBottomSheetDialogFragment.OnMultiImageSelectedListener() {
+                    @Override
+                    public void onImagesSelected(List<Uri> uriList) {
+                        if(uriList!=null && !uriList.isEmpty()) {
+                            sendVideo(uriList);
+                        }
+                    }
+                });
+    }
+
+    private void sendVideo(List<Uri> uris) {
+        for(Uri uri : uris){
+            // Tạo tham chiếu đến vị trí lưu trữ của Firebase Storage
+            StorageReference storageRef = databaseStore.getReference().child("videos/" + getNameFile(uri));
+            // Upload ảnh lên Firebase Storage
+            storageRef.putFile(uri)
+                    .addOnSuccessListener(taskSnapshot -> {
+                        // Xử lý khi upload thành công
+                        showToast("Send Video success!");
+//                  Log.d(TAG, "Upload success: " + taskSnapshot.getMetadata().getPath());
+                        HashMap<String, Object> message = new HashMap<>();
+                        message.put(Constants.KEY_SENDER_ID, preferenceManager.getString(Constants.KEY_USER_ID));
+                        message.put(Constants.KEY_RECEIVER_ID, receiverUser.id);
+                        message.put(Constants.KEY_TYPE, Constants.KEY_VIDEO_MESS);
+                        message.put(Constants.KEY_MESSAGE, "videos/" + getNameFile(uri));
+                        message.put(Constants.KEY_TIMESTAMP, new Date());
+                        database.collection(Constants.KEY_COLLECTION_CHAT).add(message);
+                        if(conversionId!=null){
+                            updateConversion("Sent Video");
+                        }
+                        else{
+                            HashMap<String, Object> conversion = new HashMap<>();
+                            conversion.put(Constants.KEY_SENDER_ID, preferenceManager.getString(Constants.KEY_USER_ID));
+                            conversion.put(Constants.KEY_SENDER_NAME, preferenceManager.getString(Constants.KEY_NAME));
+                            conversion.put(Constants.KEY_SENDER_IMAGE, preferenceManager.getString(Constants.KEY_IMAGE));
+                            conversion.put(Constants.KEY_RECEIVER_ID, receiverUser.id);
+                            conversion.put(Constants.KEY_RECEIVER_NAME, receiverUser.name);
+                            conversion.put(Constants.KEY_RECEIVER_IMAGE, receiverUser.image);
+                            conversion.put(Constants.KEY_LAST_MESSAGE, "Sent Video");
+                            conversion.put(Constants.KEY_TIMESTAMP, new Date());
+                            addConversion(conversion);
+                        }
+                    })
+                    .addOnFailureListener(exception -> {
+                        showToast("Send Video Failed!!");
+                    });
+        }
     }
 }

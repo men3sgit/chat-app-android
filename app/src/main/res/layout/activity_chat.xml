@@ -161,7 +161,7 @@
     </FrameLayout>
 
     <FrameLayout
-        android:id="@+id/layoutMic"
+        android:id="@+id/layoutMore"
         android:layout_width="@dimen/_40sdp"
         android:layout_height="@dimen/_40sdp"
         android:layout_marginStart="@dimen/_9sdp"
@@ -174,48 +174,10 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:padding="@dimen/_10sdp"
-            android:src="@drawable/ic_mic"
+            android:src="@drawable/ic_more"
             android:tint="@color/white"/>
 
     </FrameLayout>
-
-    <FrameLayout
-        android:id="@+id/layoutImage"
-        android:layout_width="@dimen/_40sdp"
-        android:layout_height="@dimen/_40sdp"
-        android:layout_marginStart="@dimen/_8sdp"
-        android:layout_marginBottom="@dimen/_12sdp"
-        android:background="@drawable/background_chat_input"
-        app:layout_constraintStart_toEndOf="@id/layoutExtend"
-        app:layout_constraintBottom_toBottomOf="parent">
-
-        <androidx.appcompat.widget.AppCompatImageView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:padding="@dimen/_8sdp"
-            android:src="@drawable/ic_image"
-            android:tint="@color/white"/>
-
-    </FrameLayout>
-
-    <FrameLayout
-        android:id="@+id/layoutExtend"
-        android:layout_width="@dimen/_40sdp"
-        android:layout_height="@dimen/_40sdp"
-        android:layout_marginStart="@dimen/_4sdp"
-        android:layout_marginBottom="@dimen/_12sdp"
-        android:visibility="invisible"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent">
-
-        <androidx.appcompat.widget.AppCompatImageView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:src="@drawable/ic_next"
-            android:tint="@color/black"/>
-
-    </FrameLayout>
-
     <EditText
         android:id="@+id/inputMessage"
         android:layout_width="0dp"
@@ -238,7 +200,7 @@
         android:textColorHint="@color/secondary_text"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/layoutSend"
-        app:layout_constraintStart_toEndOf="@id/layoutImage"/>
+        app:layout_constraintStart_toEndOf="@id/layoutMore"/>
 
 
 
