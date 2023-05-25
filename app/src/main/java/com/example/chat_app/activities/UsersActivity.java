@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.SearchView;
 import android.widget.Toast;
 
+import com.example.chat_app.R;
 import com.example.chat_app.adapters.UsersAdapter;
 import com.example.chat_app.databinding.ActivityUsersBinding;
 import com.example.chat_app.fragments.listeners.UserListener;
@@ -49,7 +50,11 @@ public class UsersActivity extends BaseActivity implements UserListener {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                filterList(newText);
+                if (newText.isEmpty()) {
+                    showAllUsers();
+                } else {
+                    filterList(newText);
+                }
                 return false;
             }
         });
@@ -57,22 +62,51 @@ public class UsersActivity extends BaseActivity implements UserListener {
     }
 
     private void filterList(String newText) {
-        List<User> filteredList = new ArrayList<>();
+        List<User> filteredByNameList = new ArrayList<>();
+        List<User> filteredByEmailList = new ArrayList<>();
         for (User user : this.users) {
-            if (user.email.toLowerCase().contains(newText.toLowerCase()) // search for email
-                    || user.name.toLowerCase().contains(newText.toLowerCase())) { // search for name
-                filteredList.add(user);
+            if (user.email.toLowerCase().contains(newText.toLowerCase())) // search for email
+            { // search for name
+                filteredByEmailList.add(user);
             }
-
-
+            if (user.name.toLowerCase().contains(newText.toLowerCase())) {
+                filteredByNameList.add(user);
+            }
         }
-        if (filteredList.isEmpty()) {
+        if (filteredByEmailList.isEmpty() && filteredByNameList.isEmpty()) {
             binding.textDataNotFound.setVisibility(View.VISIBLE);
+            binding.layoutNameData.setVisibility(View.GONE);
             binding.usersRecyclerView.setVisibility(View.GONE);
+            binding.line.setVisibility(View.GONE);
+            binding.layoutEmailData.setVisibility(View.GONE);
+            binding.usersByEmailRecyclerView.setVisibility(View.GONE);
         } else {
-            UsersAdapter usersAdapter = new UsersAdapter(filteredList, this);
-            binding.usersRecyclerView.setAdapter(usersAdapter);
-            binding.usersRecyclerView.setVisibility(View.VISIBLE);
+            if (!filteredByNameList.isEmpty()) {
+                UsersAdapter usersAdapter = new UsersAdapter(filteredByNameList, this);
+                binding.usersRecyclerView.setAdapter(usersAdapter);
+                binding.line.setVisibility(View.GONE);
+                binding.textTitleName.setText(R.string.name);
+                binding.textQtyName.setText(String.format("(%d)", filteredByNameList.size()));
+                binding.layoutNameData.setVisibility(View.VISIBLE);
+                binding.usersRecyclerView.setVisibility(View.VISIBLE);
+            } else {
+                binding.usersRecyclerView.setVisibility(View.GONE);
+                binding.layoutNameData.setVisibility(View.GONE);
+                binding.line.setVisibility(View.GONE);
+            }
+            if (!filteredByEmailList.isEmpty()) {
+                UsersAdapter usersAdapter = new UsersAdapter(filteredByEmailList, this);
+                binding.usersByEmailRecyclerView.setAdapter(usersAdapter);
+                binding.textQtyEmail.setText(String.format("(%d)", filteredByEmailList.size()));
+                binding.usersByEmailRecyclerView.setVisibility(View.VISIBLE);
+                binding.layoutEmailData.setVisibility(View.VISIBLE);
+                if(!filteredByNameList.isEmpty()){
+                    binding.line.setVisibility(View.VISIBLE);
+                }
+            } else {
+                binding.layoutEmailData.setVisibility(View.GONE);
+                binding.usersByEmailRecyclerView.setVisibility(View.GONE);
+            }
             binding.textDataNotFound.setVisibility(View.GONE);
         }
     }
@@ -110,13 +144,22 @@ public class UsersActivity extends BaseActivity implements UserListener {
                 }
                 //MT list
                 if (users.size() >= 0) {
-                    UsersAdapter usersAdapter = new UsersAdapter(users, this);
-                    binding.usersRecyclerView.setAdapter(usersAdapter);
-                    binding.usersRecyclerView.setVisibility(View.VISIBLE);
+                    showAllUsers();
                 } else showErrorMessage();
             } else showErrorMessage();
         });
     }
+    public void showAllUsers(){
+        UsersAdapter usersAdapter = new UsersAdapter(users, this);
+        binding.usersRecyclerView.setAdapter(usersAdapter);
+
+        binding.textQtyName.setText(String.format("(%d)", users.size()));
+        binding.textTitleName.setText("Suggested people");
+        binding.layoutNameData.setVisibility(View.VISIBLE);
+        binding.usersRecyclerView.setVisibility(View.VISIBLE);
+        binding.textDataNotFound.setVisibility(View.GONE);
+    }
+
 
     private void showErrorMessage() {
         binding.textErrorMessage.setText(String.format("%s", "No user available"));
