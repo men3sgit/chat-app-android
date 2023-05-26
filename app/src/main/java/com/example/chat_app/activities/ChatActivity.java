@@ -706,7 +706,7 @@ public class ChatActivity extends BaseActivity {
         mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
         mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
         mediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
-        audioPath= getCacheDir().getAbsolutePath() + "/audio_file_name.mp4";
+        audioPath= getCacheDir().getAbsolutePath() + "/"+ UUID.randomUUID()+".mp4";
         System.out.println(audioPath);
         mediaRecorder.setOutputFile(audioPath);
     }
