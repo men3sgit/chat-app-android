@@ -18,6 +18,12 @@
         android:theme="@style/Theme.Chat_app"
         tools:targetApi="31">
         <activity
+            android:name=".activities.ChangePasswordActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.SettingActivity"
+            android:exported="false" />
+        <activity
             android:name=".activities.ReceiverInformationActivity"
             android:exported="false" />
         <activity
