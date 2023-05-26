@@ -3,7 +3,7 @@
 <resources>
     <color name="primary_text">#151414</color>
     <color name="secondary_text">#6E6C6C</color>
-    <color name="input_background">#F3ECEC</color>
+    <color name="input_background">#5CF3ECEC</color>
     <color name="white">#fff</color>
     <color name="black">#000000</color>
     <color name="button_login">#F85991</color>

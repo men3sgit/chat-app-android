@@ -163,7 +163,7 @@ public class MainActivity extends BaseActivity implements ConversionListener, Na
         FirebaseMessaging.getInstance().getToken().addOnSuccessListener(this::updateToken);
     }
 
-    private void startService(){
+    private void startService() {
         Application application = getApplication(); // Android's application context
         long appID = 1894952940;   // yourAppID
         String appSign = "dd7df66ad4f55234f57caa1954d8ab61fb31005e79bc4867217f005b22ff90b0";  // yourAppSign
@@ -215,7 +215,7 @@ public class MainActivity extends BaseActivity implements ConversionListener, Na
         int id = item.getItemId();
 
         switch (id) {
-            case R.id.menuProfile:
+            case R.id.menuProfile: {
                 Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
                 intent.putExtra(Constants.KEY_EMAIL, preferenceManager.getString(Constants.KEY_EMAIL));
                 intent.putExtra(Constants.KEY_IMAGE, preferenceManager.getString(Constants.KEY_IMAGE));
@@ -224,8 +224,9 @@ public class MainActivity extends BaseActivity implements ConversionListener, Na
                 intent.putExtra(Constants.KEY_GENDER, preferenceManager.getString(Constants.KEY_GENDER));
                 intent.putExtra(Constants.KEY_PHONE_NUMBER, preferenceManager.getString(Constants.KEY_PHONE_NUMBER));
                 startActivity(intent);
+            }
 //                replaceFragment(FragmentFactory.createFragment(FragmentType.PROFILE), id);
-                break;
+            break;
 //            case R.id.menuNotification:
 //                replaceFragment(FragmentFactory.createFragment(FragmentType.NOTIFICATION), id);
 //                break;
@@ -235,9 +236,12 @@ public class MainActivity extends BaseActivity implements ConversionListener, Na
             case R.id.menuHome:
                 binding.drawerLayout.closeDrawer(GravityCompat.START);
                 break;
-//            case R.id.menuSetting:
+            case R.id.menuSetting: {
+                Intent intent = new Intent(getApplicationContext(), SettingActivity.class);
+                startActivity(intent);
+            }
 //                replaceFragment(FragmentFactory.createFragment(FragmentType.SETTING), id);
-//                break;
+            break;
 //            case R.id.menuShare:
 //                replaceFragment(FragmentFactory.createFragment(FragmentType.SHARE), id);
 //                break;
@@ -264,12 +268,13 @@ public class MainActivity extends BaseActivity implements ConversionListener, Na
         }
         super.onBackPressed();
     }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
 //        ZegoUIKitPrebuiltCallInvitationService.unInit();
     }
-      
+
     @Override
     protected void onResume() {
         super.onResume();
