@@ -70,6 +70,7 @@ dependencies {
     implementation 'androidx.navigation:navigation-fragment-ktx:2.2.0-rc03'
     implementation 'androidx.navigation:navigation-ui-ktx:2.2.0-rc03'
 
+    //call
     implementation 'com.github.ZEGOCLOUD:zego_uikit_prebuilt_call_android:+'    // Add this line to your module-level build.gradle file's dependencies, usually named [app].
     implementation 'com.github.ZEGOCLOUD:zego_uikit_signaling_plugin_android:+'  // Add this line to your module-level build.gradle file's dependencies, usually named [app].
 
@@ -91,5 +92,11 @@ dependencies {
     implementation 'com.google.android.exoplayer:exoplayer-hls:2.10.8'
     implementation 'com.google.android.exoplayer:exoplayer-smoothstreaming:2.10.8'
     implementation 'com.google.android.exoplayer:exoplayer-ui:2.10.8'
+
+    //Record
+    implementation 'com.github.3llomi:RecordView:3.1.3'
+
+    //voice
+    implementation 'com.github.JagarYousef:ChatVoicePlayer:1.1.0'
 }
 

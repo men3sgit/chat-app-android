@@ -31,6 +31,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.makeramen.roundedimageview.RoundedImageView;
+import com.zegocloud.uikit.prebuilt.call.config.ZegoNotificationConfig;
+import com.zegocloud.uikit.prebuilt.call.invite.ZegoUIKitPrebuiltCallInvitationConfig;
+import com.zegocloud.uikit.prebuilt.call.invite.ZegoUIKitPrebuiltCallInvitationService;
 //import com.zegocloud.uikit.prebuilt.call.config.ZegoNotificationConfig;
 //import com.zegocloud.uikit.prebuilt.call.invite.ZegoUIKitPrebuiltCallInvitationConfig;
 //import com.zegocloud.uikit.prebuilt.call.invite.ZegoUIKitPrebuiltCallInvitationService;
@@ -74,9 +77,6 @@ public class MainActivity extends BaseActivity implements ConversionListener, Na
 
         binding.addNewChat.setOnClickListener(v ->
                 startActivity(new Intent(getApplicationContext(), UsersActivity.class)));
-        binding.imageProfile.setOnClickListener(v -> {
-            binding.drawerLayout.openDrawer(GravityCompat.START);
-        });
         binding.imageProfile.setOnClickListener(v -> binding.drawerLayout.openDrawer(GravityCompat.START));
         binding.navigationView.setNavigationItemSelectedListener(this);
 
@@ -171,13 +171,13 @@ public class MainActivity extends BaseActivity implements ConversionListener, Na
         String userName = preferenceManager.getString(Constants.KEY_NAME);   // yourUserName
 
 
-//        ZegoUIKitPrebuiltCallInvitationConfig callInvitationConfig = new ZegoUIKitPrebuiltCallInvitationConfig();
-//        callInvitationConfig.notifyWhenAppRunningInBackgroundOrQuit = true;
-//        ZegoNotificationConfig notificationConfig = new ZegoNotificationConfig();
-//        notificationConfig.sound = "zego_uikit_sound_call";
-//        notificationConfig.channelID = "CallInvitation";
-//        notificationConfig.channelName = "CallInvitation";
-//        ZegoUIKitPrebuiltCallInvitationService.init(getApplication(), appID, appSign, userID, userName,callInvitationConfig);
+        ZegoUIKitPrebuiltCallInvitationConfig callInvitationConfig = new ZegoUIKitPrebuiltCallInvitationConfig();
+        callInvitationConfig.notifyWhenAppRunningInBackgroundOrQuit = true;
+        ZegoNotificationConfig notificationConfig = new ZegoNotificationConfig();
+        notificationConfig.sound = "zego_uikit_sound_call";
+        notificationConfig.channelID = "CallInvitation";
+        notificationConfig.channelName = "CallInvitation";
+        ZegoUIKitPrebuiltCallInvitationService.init(getApplication(), appID, appSign, userID, userName,callInvitationConfig);
     }
 
     private void updateToken(String token) {

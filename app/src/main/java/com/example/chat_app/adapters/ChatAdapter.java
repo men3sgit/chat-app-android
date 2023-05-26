@@ -39,6 +39,8 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+import me.jagar.chatvoiceplayerlibrary.VoicePlayerView;
+
 public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
     private Bitmap receiverProfileImage;
     private final List<ChatMessage> chatMessages;
@@ -151,6 +153,24 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
                     }
                 });
             }
+            else if(chatMessage.type.equals(Constants.KEY_RECORD_MESS)){
+                binding.textMessage.setVisibility(View.GONE);
+                binding.voicePlayerView.setVisibility(View.VISIBLE);
+                VoicePlayerView voicePlayerView;
+                StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+                StorageReference recordRef = storageRef.child(chatMessage.message);
+                recordRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+                        binding.voicePlayerView.setAudio(uri.toString());
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                        // Handle any errors
+                    }
+                });
+            }
             binding.textDateTime.setText(chatMessage.dateTime);
         }
     }
@@ -211,6 +231,24 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
                     @Override
                     public void onFailure(@NonNull Exception exception) {
                         Log.e(TAG, "Unable to get download URL for video.", exception);
+                    }
+                });
+            }
+            else if(chatMessage.type.equals(Constants.KEY_RECORD_MESS)){
+                binding.textMessage.setVisibility(View.GONE);
+                binding.voicePlayerView.setVisibility(View.VISIBLE);
+                VoicePlayerView voicePlayerView;
+                StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+                StorageReference recordRef = storageRef.child(chatMessage.message);
+                recordRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+                        binding.voicePlayerView.setAudio(uri.toString());
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                        // Handle any errors
                     }
                 });
             }

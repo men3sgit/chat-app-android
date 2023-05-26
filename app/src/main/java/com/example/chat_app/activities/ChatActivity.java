@@ -8,8 +8,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Base64;
@@ -24,6 +26,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
+import com.devlomi.record_view.OnRecordListener;
 import com.example.chat_app.R;
 import com.example.chat_app.adapters.ChatAdapter;
 import com.example.chat_app.databinding.ActivityChatBinding;
@@ -62,6 +65,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -94,6 +99,8 @@ public class ChatActivity extends BaseActivity {
     private String conversionId = null;
     private Boolean isReceiverAvailable = false;
     private static final int IMAGE_PICKER_REQUEST = 1;
+    private MediaRecorder mediaRecorder;
+    private String audioPath;
    private ZegoSendCallInvitationButton voiceCallBtn, videoCallBtn;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -317,9 +324,24 @@ public class ChatActivity extends BaseActivity {
                 return false;
             }
         });
-
+        binding.inputMessage.setOnClickListener(v -> {
+            binding.layoutSend.setVisibility(View.VISIBLE);
+            binding.recordButton.setVisibility(View.INVISIBLE);
+        });
+        binding.inputMessage.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean isFocused) {
+                if (isFocused) {
+                    binding.layoutSend.setVisibility(View.VISIBLE);
+                    binding.recordButton.setVisibility(View.INVISIBLE);
+                } else {
+                    // Xử lý khi EditText mất focus
+                }
+            }
+        });
         //gửi tin nhắn bằng ấn done từ bàn phím
         binding.inputMessage.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
@@ -343,12 +365,18 @@ public class ChatActivity extends BaseActivity {
             bottomSheetDialog.show();
             selectSendExtendBinding.sendImage.setOnClickListener(view -> {
                 requestPermissionImages();
+                bottomSheetDialog.dismiss();
             });
             selectSendExtendBinding.sendVideo.setOnClickListener(view -> {
                 requestPermissionVideo();
+                bottomSheetDialog.dismiss();
             });
             selectSendExtendBinding.Record.setOnClickListener(view -> {
                 //Record
+                requestPermissionRecord();
+                bottomSheetDialog.dismiss();
+                binding.layoutSend.setVisibility(View.INVISIBLE);
+                binding.recordButton.setVisibility(View.VISIBLE);
             });
         });
 
@@ -600,5 +628,149 @@ public class ChatActivity extends BaseActivity {
                         showToast("Send Video Failed!!");
                     });
         }
+    }
+    private void getRecord() {
+        binding.recordButton.setRecordView(binding.recordView);
+        binding.recordView.setOnRecordListener(new OnRecordListener() {
+            @Override
+            public void onStart() {
+                showToast("Start");
+                setUpRecord();
+
+                try {
+                    mediaRecorder.prepare();
+                    mediaRecorder.start();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+
+                binding.inputMessage.setVisibility(View.INVISIBLE);
+                binding.layoutMore.setVisibility(View.INVISIBLE);
+            }
+
+            @Override
+            public void onCancel() {
+                //On Swipe To Cancel
+                showToast("Cancel");
+
+                mediaRecorder.reset();
+                mediaRecorder.release();
+
+                File file = new File(audioPath);
+                if(!file.exists())
+                    file.delete();
+
+                binding.inputMessage.setVisibility(View.VISIBLE);
+                binding.layoutMore.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onFinish(long recordTime, boolean limitReached) {
+                //Stop Recording..
+                //limitReached to determine if the Record was finished when time limit reached.
+//                showToast("Finish: "+recordTime);
+
+                mediaRecorder.stop();
+                mediaRecorder.release();
+
+                binding.inputMessage.setVisibility(View.VISIBLE);
+                binding.layoutMore.setVisibility(View.VISIBLE);
+                sendRecording(audioPath);
+            }
+
+            @Override
+            public void onLessThanSecond() {
+                //When the record time is less than One Second
+                showToast("LessThanSecond");
+                mediaRecorder.reset();
+                mediaRecorder.release();
+                File file = new File(audioPath);
+                if(!file.exists())
+                    file.delete();
+
+                binding.inputMessage.setVisibility(View.VISIBLE);
+                binding.layoutMore.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onLock() {
+                //When Lock gets activated
+                Log.d("RecordView", "onLock");
+            }
+
+        });
+    }
+
+    private void setUpRecord() {
+        mediaRecorder = new MediaRecorder();
+        mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+        mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+        mediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+        audioPath= getCacheDir().getAbsolutePath() + "/audio_file_name.mp4";
+        System.out.println(audioPath);
+        mediaRecorder.setOutputFile(audioPath);
+    }
+
+    private void sendRecording(String audioPath) {
+        Uri uri = Uri.fromFile(new File(audioPath));
+        System.out.println(audioPath.toString());
+        // Tạo tham chiếu đến vị trí lưu trữ của Firebase Storage
+        StorageReference storageRef = databaseStore.getReference().child("records/" + getNameFile(uri));
+        // Upload voice lên Firebase Storage
+        storageRef.putFile(uri)
+                .addOnSuccessListener(taskSnapshot -> {
+                    // Xử lý khi upload thành công
+                    showToast("Send Record success!");
+//                  Log.d(TAG, "Upload success: " + taskSnapshot.getMetadata().getPath());
+                    HashMap<String, Object> message = new HashMap<>();
+                    message.put(Constants.KEY_SENDER_ID, preferenceManager.getString(Constants.KEY_USER_ID));
+                    message.put(Constants.KEY_RECEIVER_ID, receiverUser.id);
+                    message.put(Constants.KEY_TYPE, Constants.KEY_RECORD_MESS);
+                    message.put(Constants.KEY_MESSAGE, "records/" + getNameFile(uri));
+                    message.put(Constants.KEY_TIMESTAMP, new Date());
+                    database.collection(Constants.KEY_COLLECTION_CHAT).add(message);
+                    if(conversionId!=null){
+                        updateConversion("Sent Record");
+                    }
+                    else{
+                        HashMap<String, Object> conversion = new HashMap<>();
+                        conversion.put(Constants.KEY_SENDER_ID, preferenceManager.getString(Constants.KEY_USER_ID));
+                        conversion.put(Constants.KEY_SENDER_NAME, preferenceManager.getString(Constants.KEY_NAME));
+                        conversion.put(Constants.KEY_SENDER_IMAGE, preferenceManager.getString(Constants.KEY_IMAGE));
+                        conversion.put(Constants.KEY_RECEIVER_ID, receiverUser.id);
+                        conversion.put(Constants.KEY_RECEIVER_NAME, receiverUser.name);
+                        conversion.put(Constants.KEY_RECEIVER_IMAGE, receiverUser.image);
+                        conversion.put(Constants.KEY_LAST_MESSAGE, "Sent Record");
+                        conversion.put(Constants.KEY_TIMESTAMP, new Date());
+                        addConversion(conversion);
+                    }
+                })
+                .addOnFailureListener(exception -> {
+                    showToast("Send Record Failed!!");
+                });
+    }
+    private void requestPermissionRecord(){
+        Dexter.withActivity(this)
+                .withPermissions(
+                        Manifest.permission.READ_EXTERNAL_STORAGE,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                        Manifest.permission.RECORD_AUDIO
+                )
+                .withListener(new MultiplePermissionsListener() {
+                    @Override
+                    public void onPermissionsChecked(MultiplePermissionsReport report) {
+                        if (report.areAllPermissionsGranted()) {
+                            getRecord();
+                        } else {
+                            Toast.makeText(ChatActivity.this, "Bạn chưa cấp quyền truy cập.", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
+                        token.continuePermissionRequest();
+                    }
+                })
+                .check();
     }
 }
