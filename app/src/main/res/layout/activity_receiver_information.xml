@@ -23,8 +23,8 @@
             android:layout_height="@dimen/_100sdp"
             android:layout_gravity="center|bottom"
             android:background="@drawable/background_image"
-            android:src="@drawable/tu_linh"
             android:scaleType="centerCrop"
+            android:src="@drawable/tu_linh"
             app:riv_oval="true" />
 
         <TextView

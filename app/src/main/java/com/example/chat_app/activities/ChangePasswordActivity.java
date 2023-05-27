@@ -32,7 +32,12 @@ public class ChangePasswordActivity extends AppCompatActivity {
 
         binding.buttonUpdatePassword.setOnClickListener(view -> {
             if (!binding.editCurrentPassword.getText().toString().equals(preferenceManager.getString(Constants.KEY_PASSWORD))) {
+
                 showToast("Current password wrong");
+                return;
+            }
+            if (binding.editNewPassword.getText().toString().trim().length() < 6) {
+                showToast("Password length must larger than 6 characters");
                 return;
             }
             if (binding.editNewPassword.getText().toString().equals(binding.editConfirmNewPassword.getText().toString())) {
@@ -47,9 +52,12 @@ public class ChangePasswordActivity extends AppCompatActivity {
                             preferenceManager.putString(Constants.KEY_PASSWORD, password);
                             showToast("Update password success!");
                             clearInputs();
+                            onBackPressed();
                         }).addOnFailureListener(exception -> {
                             showToast(exception.getMessage());
                         });
+            } else {
+                showToast("Password no match!");
             }
 
         });
@@ -58,6 +66,7 @@ public class ChangePasswordActivity extends AppCompatActivity {
     private void showToast(String message) {
         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
     }
+
     private void clearInputs() {
         binding.editCurrentPassword.setText("");
         binding.editNewPassword.setText("");
