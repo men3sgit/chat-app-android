@@ -48,7 +48,11 @@ public class Constants {
         return remoteMsgHeaders;
     }
 
-//    Test commit
-    //Test
-//    Sdjsdfjsdljewlkjl
+
+
+    public static final String KEY_TEXT_MESS = "text";
+    public static final String KEY_VIDEO_MESS = "video";
+    public static final String KEY_RECORD_MESS = "record";
+
+
 }
