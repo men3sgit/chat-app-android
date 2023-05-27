@@ -121,8 +121,8 @@ public class ChatActivity extends BaseActivity {
         database = FirebaseFirestore.getInstance();
 
         databaseStore = FirebaseStorage.getInstance();
-        voiceCallBtn = findViewById(R.id.imageCall);
-        videoCallBtn = findViewById(R.id.imageVideoCall);
+//        voiceCallBtn = findViewById(R.id.imageCall);
+//        videoCallBtn = findViewById(R.id.imageVideoCall);
 
         database.collection(Constants.KEY_COLLECTION_USERS).document(receiverUser.id).get().addOnCompleteListener(task -> {
             if (task.isSuccessful() && task.getResult() != null) {
@@ -144,7 +144,7 @@ public class ChatActivity extends BaseActivity {
         HashMap<String, Object> message = new HashMap<>();
         message.put(Constants.KEY_SENDER_ID, preferenceManager.getString(Constants.KEY_USER_ID));
         message.put(Constants.KEY_RECEIVER_ID, receiverUser.id);
-        message.put(Constants.KEY_TYPE, Constants.KEY_TEXT_MESS);
+//        message.put(Constants.KEY_TYPE, Constants.KEY_TEXT_MESS);
         message.put(Constants.KEY_MESSAGE, binding.inputMessage.getText().toString());
         message.put(Constants.KEY_TIMESTAMP, new Date());
         database.collection(Constants.KEY_COLLECTION_CHAT).add(message);
@@ -604,7 +604,7 @@ public class ChatActivity extends BaseActivity {
                         HashMap<String, Object> message = new HashMap<>();
                         message.put(Constants.KEY_SENDER_ID, preferenceManager.getString(Constants.KEY_USER_ID));
                         message.put(Constants.KEY_RECEIVER_ID, receiverUser.id);
-                        message.put(Constants.KEY_TYPE, Constants.KEY_VIDEO_MESS);
+//                        message.put(Constants.KEY_TYPE, Constants.KEY_VIDEO_MESS);
                         message.put(Constants.KEY_MESSAGE, "videos/" + getNameFile(uri));
                         message.put(Constants.KEY_TIMESTAMP, new Date());
                         database.collection(Constants.KEY_COLLECTION_CHAT).add(message);

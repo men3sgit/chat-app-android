@@ -103,8 +103,8 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
         }
 
         void setData(ChatMessage chatMessage, Application application){
-            binding.textMessage.setText(chatMessage.message);
             if(chatMessage.type.equals(Constants.KEY_TEXT_MESS)) {
+                binding.textMessage.setText(chatMessage.message);
                 binding.textMessage.setText(chatMessage.message);
             }
             else if(chatMessage.type.equals(Constants.KEY_IMAGE)){
