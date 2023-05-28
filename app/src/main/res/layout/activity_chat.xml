@@ -15,7 +15,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginBottom="@dimen/_16sdp"
-        android:background="@drawable/background_content_top"
+        android:background="@android:color/transparent"
         app:layout_constraintBottom_toTopOf="@id/layoutSend"
         app:layout_constraintTop_toTopOf="parent"/>
 
@@ -23,11 +23,13 @@
         android:id="@+id/headerBackground"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:background="@color/button_login"
+        android:background="@color/pink"
+        android:alpha="0.3"
         app:layout_constraintBottom_toTopOf="@id/viewSupporter"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0"
         tools:layout_editor_absoluteX="0dp" />
+
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/imageBack"
@@ -90,15 +92,15 @@
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@id/imageBack"
         app:layout_constraintStart_toEndOf="@id/imageBack"
-        app:layout_constraintTop_toTopOf="@id/imageBack"/>
-<!--    app:layout_constraintEnd_toStartOf="@id/imageVideoCall"-->
+        app:layout_constraintTop_toTopOf="@id/imageBack"
+    app:layout_constraintEnd_toStartOf="@id/imageVideoCall"/>
 
 
     <View
         android:id="@+id/viewSupporter"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/secondary_text"
+        android:background="@drawable/draw_transparent"
         android:layout_marginTop="@dimen/_12sdp"
         app:layout_constraintTop_toBottomOf="@id/imageBack"/>
 
@@ -151,15 +153,57 @@
         app:layout_constraintBottom_toBottomOf="parent">
 
         <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/backSend"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginStart="@dimen/_4sdp"
             android:layout_marginLeft="@dimen/_4sdp"
             android:padding="@dimen/_8sdp"
             android:src="@drawable/ic_send"
-            android:tint="@color/white"/>
-
+            android:tint="@color/white"
+            />
+<!--        <com.devlomi.record_view.RecordButton-->
+<!--            android:id="@+id/backRecord"-->
+<!--            android:contentDescription="mic"-->
+<!--            android:layout_width="50dp"-->
+<!--            android:padding="@dimen/_8sdp"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:layout_gravity="center|bottom"-->
+<!--            app:mic_icon="@drawable/ic_mic_white"-->
+<!--            android:visibility="gone"-->
+<!--            />-->
     </FrameLayout>
+    <RelativeLayout
+        android:id="@+id/sendRecord"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="@dimen/_12sdp"
+        android:layout_marginEnd="@dimen/_16sdp">
+        <com.devlomi.record_view.RecordView
+            android:id="@+id/record_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_toLeftOf="@id/record_button"
+            app:slide_to_cancel_arrow="@drawable/recv_ic_arrow"
+            app:slide_to_cancel_arrow_color="#000000"
+            app:slide_to_cancel_bounds="8dp"
+            app:slide_to_cancel_margin_right="10dp"
+            app:slide_to_cancel_text="Slide To Cancel"
+            app:counter_time_color="#ff0000"
+            />
+
+        <com.devlomi.record_view.RecordButton
+            android:id="@+id/record_button"
+            android:layout_width="@dimen/_40sdp"
+            android:layout_height="@dimen/_40sdp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/background_chat_input"
+            android:scaleType="centerInside"
+            app:mic_icon="@drawable/ic_mic_white"
+            android:visibility="invisible"/>
+    </RelativeLayout>
 
     <FrameLayout
         android:id="@+id/layoutMore"
@@ -201,7 +245,20 @@
         android:textColorHint="@color/secondary_text"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/layoutSend"
-        app:layout_constraintStart_toEndOf="@id/layoutMore"/>
+        app:layout_constraintStart_toEndOf="@id/layoutMore"
+        />
+
+<!--    <com.devlomi.record_view.RecordView-->
+<!--        android:id="@+id/recordView"-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        app:slide_to_cancel_arrow="@drawable/recv_ic_arrow"-->
+<!--        app:slide_to_cancel_arrow_color="@color/black"-->
+<!--        app:slide_to_cancel_text="slide to cancel"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@id/viewBackground"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintEnd_toStartOf="@id/layoutSend"/>-->
 
 
 
