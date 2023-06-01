@@ -3,4 +3,23 @@
         <item name="colorPrimary">@color/primary_text</item>
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
     </style>
+
+
+
+    <!--    Dark mode-->
+    <style name="PRIMARY_TEXT">
+        <item name="android:textColor">@color/primary_text_dark</item>
+    </style>
+    <style name="SECONDARY_TEXT">
+        <item name="android:textColor">@color/secondary_text_dark</item>
+    </style>
+    <style name="SCREEN">
+        <item name="android:background">@color/background_dark_mode</item>
+    </style>
+    <style name="BLANK">
+        <item name="android:background">@color/blank_dark</item>
+    </style>
+    <style name="MAIN_CONTENT_BACKGROUND">
+        <item name="android:background">@drawable/background_content_bottom_dark</item>
+    </style>
 </resources>
