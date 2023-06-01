@@ -11,6 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.view.GravityCompat;
 
 import com.example.chat_app.R;
@@ -63,6 +64,9 @@ public class MainActivity extends BaseActivity implements ConversionListener, Na
         init();
         listenConversations();
         startService();
+        if (preferenceManager.getBoolean("NIGHT_MODE")) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        }
     }
 
     private void init() {
@@ -177,7 +181,7 @@ public class MainActivity extends BaseActivity implements ConversionListener, Na
         notificationConfig.sound = "zego_uikit_sound_call";
         notificationConfig.channelID = "CallInvitation";
         notificationConfig.channelName = "CallInvitation";
-        ZegoUIKitPrebuiltCallInvitationService.init(getApplication(), appID, appSign, userID, userName,callInvitationConfig);
+        ZegoUIKitPrebuiltCallInvitationService.init(getApplication(), appID, appSign, userID, userName, callInvitationConfig);
     }
 
     private void updateToken(String token) {
@@ -225,11 +229,7 @@ public class MainActivity extends BaseActivity implements ConversionListener, Na
                 intent.putExtra(Constants.KEY_PHONE_NUMBER, preferenceManager.getString(Constants.KEY_PHONE_NUMBER));
                 startActivity(intent);
             }
-//                replaceFragment(FragmentFactory.createFragment(FragmentType.PROFILE), id);
             break;
-//            case R.id.menuNotification:
-//                replaceFragment(FragmentFactory.createFragment(FragmentType.NOTIFICATION), id);
-//                break;
             case R.id.menuSignOut:
                 signOut();
                 break;
@@ -240,23 +240,10 @@ public class MainActivity extends BaseActivity implements ConversionListener, Na
                 Intent intent = new Intent(getApplicationContext(), SettingActivity.class);
                 startActivity(intent);
             }
-//                replaceFragment(FragmentFactory.createFragment(FragmentType.SETTING), id);
             break;
-//            case R.id.menuShare:
-//                replaceFragment(FragmentFactory.createFragment(FragmentType.SHARE), id);
-//                break;
-//        }
         }
         return true;
 
-
-//    private void replaceFragment(Fragment fragment, int itemId) {
-//        if (itemId == CURRENT_FRAGMENT) return;
-//        CURRENT_FRAGMENT = itemId;
-//        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-//        fragmentTransaction.replace(R.id.content_main, fragment);
-//        fragmentTransaction.commit();
-//    }
 
     }
 
@@ -272,7 +259,7 @@ public class MainActivity extends BaseActivity implements ConversionListener, Na
     @Override
     protected void onDestroy() {
         super.onDestroy();
-//        ZegoUIKitPrebuiltCallInvitationService.unInit();
+        ZegoUIKitPrebuiltCallInvitationService.unInit();
     }
 
     @Override

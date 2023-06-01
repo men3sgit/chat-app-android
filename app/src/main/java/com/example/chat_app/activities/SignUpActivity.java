@@ -163,6 +163,8 @@ public class SignUpActivity extends AppCompatActivity {
             preferenceManager.putString(Constants.KEY_GENDER, getGender());
             preferenceManager.putString(Constants.KEY_PHONE_NUMBER, null);
 
+            preferenceManager.putBoolean("NIGHT_MODE", false);
+
             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
