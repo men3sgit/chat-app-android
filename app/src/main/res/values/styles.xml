@@ -1,3 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <style name="LightTheme" parent="Theme.Chat_app">
+        <!-- Customize light theme attributes -->
+    </style>
+
+    <style name="DarkTheme" parent="Theme.AppCompat">
+        <!-- Customize dark theme attributes -->
+    </style>
 </resources>

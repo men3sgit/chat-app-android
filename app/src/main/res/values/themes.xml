@@ -10,21 +10,27 @@
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="Theme.Chat_app.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+<!--    <style name="Theme.Chat_app.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />-->
 
-    <style name="Theme.Chat_app.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+<!--    <style name="Theme.Chat_app.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />-->
 
     <!--    Light mode-->
     <style name="PRIMARY_TEXT">
-        <item name="color">#1e1e1e</item>
+        <item name="android:textColor">@color/primary_light</item>
     </style>
     <style name="SECONDARY_TEXT">
-        <item name="color">#666</item>
+        <item name="android:textColor">@color/secondary_light</item>
     </style>
     <style name="SCREEN">
-        <item name="android:background">#eee</item>
+
+        <item name="android:background">@color/background_light_mode</item>
+
     </style>
     <style name="BLANK">
-        <item name="android:background">#DDD</item>
+        <item name="android:background">@color/blank_light</item>
     </style>
+    <style name="MAIN_CONTENT_BACKGROUND">
+        <item name="android:background">@drawable/background_content_bottom_light</item>
+    </style>
+
 </resources>
