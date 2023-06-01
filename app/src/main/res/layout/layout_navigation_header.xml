@@ -47,7 +47,7 @@
             android:text="Duong Duy Men"
             android:textStyle="bold"
             android:textSize="@dimen/_12ssp"
-            android:textColor="@color/primary_text"
+            style="@style/PRIMARY_TEXT"
              />
         <TextView
             android:id="@+id/headerTextBirtDate"
