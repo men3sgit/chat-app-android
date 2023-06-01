@@ -1,12 +1,18 @@
 package com.example.chat_app.activities;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Base64;
 import android.view.View;
 import android.widget.DatePicker;
@@ -22,8 +28,12 @@ import com.example.chat_app.utilities.DateAdapter;
 import com.example.chat_app.utilities.PreferenceManager;
 import com.example.chat_app.utilities.Render;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.Calendar;
 import java.util.HashMap;
 
@@ -33,6 +43,7 @@ import java.util.HashMap;
 public class ProfileActivity extends BaseActivity {
     private PreferenceManager preferenceManager;
     private ActivityProfileBinding binding;
+    private String encodedImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,14 +58,14 @@ public class ProfileActivity extends BaseActivity {
 
     private void initUI() {
         Intent intent = getIntent();
-        Render.renderingBitmap(binding.imageProfile, intent.getStringExtra(Constants.KEY_IMAGE));
+        encodedImage = intent.getStringExtra(Constants.KEY_IMAGE);
+        Render.renderingBitmap(binding.imageProfile, encodedImage);
         binding.textName.setText(intent.getStringExtra(Constants.KEY_NAME));
         binding.textBirthDate.setText(intent.getStringExtra(Constants.KEY_BIRTH_DATE));
         binding.textEmail.setText(intent.getStringExtra(Constants.KEY_EMAIL));
         binding.textGender.setText(intent.getStringExtra(Constants.KEY_GENDER));
         final String phoneNumber = intent.getStringExtra(Constants.KEY_PHONE_NUMBER);
         binding.textPhoneNumber.setText(phoneNumber == null ? "No data" : phoneNumber);
-
     }
 
     private void setListeners() {
@@ -63,8 +74,8 @@ public class ProfileActivity extends BaseActivity {
             Dialog dialog = new Dialog(ProfileActivity.this);
             dialog.setContentView(R.layout.custom_dialog_image);
             ImageView imageView = dialog.findViewById(R.id.image);
-            int imageResource = R.drawable.phg2;
-            imageView.setImageResource(imageResource);
+            Bitmap bitmap = Render.renderingBitmap(encodedImage);
+            imageView.setImageBitmap(bitmap);
             dialog.show();
         });
         binding.buttonEdit.setOnClickListener(view -> {
@@ -92,7 +103,11 @@ public class ProfileActivity extends BaseActivity {
             binding.tableRoot.setVisibility(View.GONE);
             binding.tableEdit.setVisibility(View.VISIBLE);
         });
-
+        binding.textAddImage.setOnClickListener(view -> {
+            Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            intent.addFlags(Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
+            pickImage.launch(intent);
+        });
 
         binding.buttonUpdate.setOnClickListener(view -> {
             if (binding.tableRoot.getVisibility() == View.VISIBLE) {
@@ -117,12 +132,13 @@ public class ProfileActivity extends BaseActivity {
             user.put(Constants.KEY_BIRTH_DATE, birthDate);
             user.put(Constants.KEY_GENDER, gender);
             user.put(Constants.KEY_PHONE_NUMBER, phoneNumber);
+            user.put(Constants.KEY_IMAGE, encodedImage);
 
             database.collection(Constants.KEY_COLLECTION_USERS)
                     .document(preferenceManager.getString(Constants.KEY_USER_ID))
                     .update(user)
                     .addOnSuccessListener(documentReference -> {
-                        //preferenceManager.putString(Constants.KEY_IMAGE, encodedImage);
+                        preferenceManager.putString(Constants.KEY_IMAGE, encodedImage);
                         preferenceManager.putString(Constants.KEY_NAME, name);
                         preferenceManager.putString(Constants.KEY_BIRTH_DATE, birthDate);
                         preferenceManager.putString(Constants.KEY_GENDER, gender);
@@ -143,7 +159,41 @@ public class ProfileActivity extends BaseActivity {
             onClickBirthDateListener();
         });
     }
+    private final ActivityResultLauncher<Intent> pickImage = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == RESULT_OK) {
+                    if (result.getData() != null) {
+                        Uri imageUri = result.getData().getData();
+                        try {
+                            InputStream inputSteam = getContentResolver().openInputStream(imageUri);
+                            Bitmap bitmap = BitmapFactory.decodeStream(inputSteam);
+                            //Hiện ảnh đã chọn lên imageProfile
+                            binding.imageProfile.setImageBitmap(bitmap);
 
+                        } catch (FileNotFoundException e) {
+                            e.printStackTrace();
+                        }
+                        Picasso.get().load(imageUri).into(new Target() {
+                            @Override
+                            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                                ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                                bitmap.compress(Bitmap.CompressFormat.JPEG, 80, byteArrayOutputStream); // nén ảnh trước khi chuyển đổi thành chuỗi
+                                byte[] byteArray = byteArrayOutputStream.toByteArray();
+                                String encoded = Base64.encodeToString(byteArray, Base64.DEFAULT);
+                                encodedImage = encoded;
+                            }
+
+                            @Override
+                            public void onBitmapFailed(Exception e, Drawable errorDrawable) {}
+
+                            @Override
+                            public void onPrepareLoad(Drawable placeHolderDrawable) {}
+                        });
+                    }
+                }
+            }
+    );
     private void onClickBirthDateListener() {
         binding.buttonBirthDate.setOnClickListener(view -> {
                     // default date
@@ -169,15 +219,6 @@ public class ProfileActivity extends BaseActivity {
         );
     }
 
-    private String encodeImage(Bitmap bitmap) {
-        final int previewWidth = 150;
-        final int previewHeight = bitmap.getHeight() * previewWidth / bitmap.getWidth();
-        Bitmap previewBitmap = Bitmap.createScaledBitmap(bitmap, previewWidth, previewHeight, false);
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        previewBitmap.compress(Bitmap.CompressFormat.JPEG, 50, byteArrayOutputStream);
-        byte[] bytes = byteArrayOutputStream.toByteArray();
-        return Base64.encodeToString(bytes, Base64.DEFAULT);
-    }
 
     private void showToast(String message) {
         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();

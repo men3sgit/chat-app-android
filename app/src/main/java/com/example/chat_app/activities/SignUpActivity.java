@@ -9,6 +9,7 @@ import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -27,6 +28,8 @@ import com.example.chat_app.utilities.PreferenceManager;
 import com.example.chat_app.utilities.ViewAdapter;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
@@ -179,16 +182,6 @@ public class SignUpActivity extends AppCompatActivity {
         return binding.radioFemale.getText().toString();
     }
 
-    private String encodeImage(Bitmap bitmap) {
-        int previewWidth = 150;
-        int previewHeight = bitmap.getHeight() * previewWidth / bitmap.getWidth();
-        Bitmap previewBitmap = Bitmap.createScaledBitmap(bitmap, previewWidth, previewHeight, false);
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        previewBitmap.compress(Bitmap.CompressFormat.JPEG, 50, byteArrayOutputStream);
-        byte[] bytes = byteArrayOutputStream.toByteArray();
-        return Base64.encodeToString(bytes, Base64.DEFAULT);
-    }
-
     private final ActivityResultLauncher<Intent> pickImage = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
@@ -202,10 +195,26 @@ public class SignUpActivity extends AppCompatActivity {
                             binding.imageProfile.setImageBitmap(bitmap);
                             //Ẩn text AddImage
                             binding.textAddImage.setVisibility(View.GONE);
-                            encodedImage = encodeImage(bitmap);
+
                         } catch (FileNotFoundException e) {
                             e.printStackTrace();
                         }
+                        Picasso.get().load(imageUri).into(new Target() {
+                            @Override
+                            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                                ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                                bitmap.compress(Bitmap.CompressFormat.JPEG, 80, byteArrayOutputStream); // nén ảnh trước khi chuyển đổi thành chuỗi
+                                byte[] byteArray = byteArrayOutputStream.toByteArray();
+                                String encoded = Base64.encodeToString(byteArray, Base64.DEFAULT);
+                                encodedImage = encoded;
+                            }
+
+                            @Override
+                            public void onBitmapFailed(Exception e, Drawable errorDrawable) {}
+
+                            @Override
+                            public void onPrepareLoad(Drawable placeHolderDrawable) {}
+                        });
                     }
                 }
             }
