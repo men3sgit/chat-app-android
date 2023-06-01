@@ -5,7 +5,6 @@
     android:layout_height="wrap_content"
     android:layout_marginTop="@dimen/_8sdp"
     android:padding="@dimen/_4sdp">
-
     <com.makeramen.roundedimageview.RoundedImageView
         android:id="@+id/imageProfile"
         android:layout_width="@dimen/_25sdp"
@@ -24,25 +23,26 @@
         android:layout_marginLeft="@dimen/_4sdp"
         app:layout_constraintStart_toEndOf="@id/imageProfile"
         app:layout_constraintBottom_toBottomOf="parent"/>
-    <TextView
-        android:id="@+id/textMessage"
-        android:layout_width="0dp"
+    <me.jagar.chatvoiceplayerlibrary.VoicePlayerView
+        android:id="@+id/voicePlayerView"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/_4sdp"
-        android:layout_marginLeft="@dimen/_8sdp"
-        android:background="@drawable/background_received_message"
-        android:paddingStart="@dimen/_12sdp"
-        android:paddingEnd="@dimen/_12sdp"
-        android:paddingBottom="@dimen/_8sdp"
-        android:paddingTop="@dimen/_8sdp"
-        app:layout_constraintWidth_max="wrap"
-        android:textColor="@color/white"
-        android:textSize="@dimen/_13ssp"
+        app:enableVisualizer="true"
+        app:visualizationPlayedColor="#ff7700"
+        app:visualizationNotPlayedColor="#727171"
+        app:playPauseBackgroundColor="#ff7700"
+        app:timingBackgroundColor="#6AFF7700"
+        app:seekBarProgressColor="#000"
+        app:showShareButton="false"
+        app:shareCornerRadius="100"
+        app:playPauseCornerRadius="100"
+        app:showTiming="true"
+        app:viewCornerRadius="100"
+        app:viewBackground="#C6C4CF"
+        app:progressTimeColor="#000"
+        app:seekBarThumbColor="#FFC107"
+        app:playProgressbarColor="#ff7700"
         app:layout_constraintStart_toEndOf="@id/imageProfile"
         app:layout_constraintBottom_toTopOf="@id/textDateTime"
-        app:layout_constraintWidth_percent="0.75"/>
-
-
-
-
+        />
 </androidx.constraintlayout.widget.ConstraintLayout>

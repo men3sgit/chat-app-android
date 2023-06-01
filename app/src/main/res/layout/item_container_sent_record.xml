@@ -5,7 +5,6 @@
     android:layout_height="wrap_content"
     android:layout_marginTop="@dimen/_8sdp"
     android:padding="@dimen/_4sdp">
-
     <TextView
         android:id="@+id/textDateTime"
         android:layout_width="0dp"
@@ -15,27 +14,27 @@
         android:textSize="@dimen/_8ssp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"/>
-    <TextView
-        android:id="@+id/textMessage"
+    <me.jagar.chatvoiceplayerlibrary.VoicePlayerView
+        android:id="@+id/voicePlayerView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/background_sent_message"
-        android:paddingStart="@dimen/_12sdp"
-        android:paddingEnd="@dimen/_12sdp"
-        android:paddingTop="@dimen/_8sdp"
-        android:paddingBottom="@dimen/_8sdp"
-        app:layout_constraintWidth_max="wrap"
-        android:textColor="@color/white"
-        android:textSize="@dimen/_13ssp"
-        android:longClickable="true"
+        app:enableVisualizer="true"
+        app:visualizationPlayedColor="#FD3EBE"
+        app:visualizationNotPlayedColor="#727171"
+        app:playPauseBackgroundColor="#FF6CB8"
+        app:timingBackgroundColor="#6AFF5AE4"
+        app:seekBarProgressColor="#000"
+        app:playPauseCornerRadius="100"
+        app:showShareButton="false"
+        app:showTiming="true"
+        app:viewCornerRadius="100"
+        app:viewBackground="#C6C4CF"
+        app:progressTimeColor="#000"
+        app:seekBarThumbColor="#FFC107"
+        app:playProgressbarColor="#ff7700"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/textDateTime" />
-
-
-
-
-
-
-
+        app:layout_constraintBottom_toTopOf="@id/textDateTime"
+        android:longClickable="true"
+        />
 </androidx.constraintlayout.widget.ConstraintLayout>
