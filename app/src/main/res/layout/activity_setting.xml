@@ -3,38 +3,43 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/layoutContainer"
-    style="@style/SCREEN"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".activities.SettingActivity">
+    tools:context=".activities.SettingActivity"
+    style="@style/SCREEN">
+
     <LinearLayout
-        android:padding="@dimen/_8sdp"
-        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="@dimen/_8sdp">
+
         <ImageView
             android:id="@+id/buttonBack"
-            android:layout_width="@dimen/_30sdp"
-            android:layout_height="@dimen/_30sdp"
+            android:layout_width="@dimen/_20sdp"
+            android:layout_height="@dimen/_20sdp"
             android:layout_marginStart="@dimen/_8sdp"
             android:src="@drawable/ic_back" />
+
         <TextView
-            android:layout_marginEnd="@dimen/_16sdp"
-            android:layout_gravity="center"
-            android:gravity="center"
+            style="@style/PRIMARY_TEXT"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Settings"
-            android:textSize="@dimen/_16ssp"
-            android:textStyle="bold"
-            android:textColor="@color/primary_text"
-            />
+            android:layout_gravity="center"
+            android:layout_marginEnd="@dimen/_16sdp"
+            android:gravity="center"
+            android:text="@string/settings"
+            android:textSize="@dimen/_14ssp"
+            android:textStyle="bold" />
     </LinearLayout>
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="@dimen/_2sdp"
-        android:background="@drawable/line_bottom"/>
+        android:background="@drawable/line_bottom"
+        android:backgroundTint="@color/black"/>
+
     <LinearLayout
         android:id="@+id/layoutChangePassword"
         android:layout_width="match_parent"
@@ -45,11 +50,11 @@
         android:paddingBottom="@dimen/_12sdp">
 
         <TextView
+            style="@style/PRIMARY_TEXT"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Change password"
-            android:textColor="@color/primary_text"
-            android:textSize="@dimen/_14ssp" />
+            android:textSize="@dimen/_14ssp"/>
 
         <ImageView
             android:layout_width="match_parent"
@@ -62,7 +67,7 @@
     <TextView
         style="@style/BLANK"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_10sdp" />
+        android:layout_height="@dimen/_8sdp" />
 
     <LinearLayout
         android:id="@+id/layoutTheme"
@@ -75,13 +80,14 @@
         android:paddingBottom="@dimen/_8sdp">
 
         <TextView
+            style="@style/PRIMARY_TEXT"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Theme"
-            android:textColor="@color/primary_text"
             android:textSize="@dimen/_14ssp" />
 
         <TextView
+            style="@style/SECONDARY_TEXT"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingTop="@dimen/_8sdp"
@@ -93,18 +99,18 @@
             android:layout_marginTop="@dimen/_16sdp">
 
             <LinearLayout
-                android:background="@drawable/background_switch_mode"
-                android:padding="@dimen/_6sdp"
                 android:id="@+id/layoutLightMode"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:padding="@dimen/_6sdp">
 
                 <CheckBox
+                    android:id="@+id/checkLight"
+                    style="@style/PRIMARY_TEXT"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:checked="true"
                     android:text="Light"
                     android:textStyle="bold" />
 
@@ -115,23 +121,25 @@
             </LinearLayout>
 
             <LinearLayout
-                android:padding="@dimen/_6sdp"
                 android:id="@+id/layoutDarkMode"
-                android:orientation="vertical"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1">
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:padding="@dimen/_6sdp">
 
                 <CheckBox
+                    android:id="@+id/checkDark"
+                    style="@style/PRIMARY_TEXT"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Dark"
                     android:textStyle="bold" />
+
                 <include
                     layout="@layout/item_container_main_screen_dark_mode"
                     android:layout_width="170dp"
-                    android:layout_height="338dp"
-                    />
+                    android:layout_height="338dp" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

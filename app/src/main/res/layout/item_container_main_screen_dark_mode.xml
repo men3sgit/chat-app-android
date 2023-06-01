@@ -47,7 +47,9 @@
             android:layout_marginTop="@dimen/_16sdp"
             android:background="@drawable/background_content_bottom_dark"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/imageProfile">
+            app:layout_constraintTop_toBottomOf="@id/imageProfile"
+            app:layout_constraintVertical_bias="1.0"
+            tools:layout_editor_absoluteX="0dp">
 
 
             <LinearLayout
@@ -58,14 +60,14 @@
                 android:orientation="horizontal">
 
                 <FrameLayout
+                    android:background="@color/background_dark_mode"
                     android:layout_width="@dimen/_16sdp"
                     android:layout_height="@dimen/_16sdp"
-                    android:layout_marginStart="@dimen/_2sdp">
+                    >
 
                     <com.makeramen.roundedimageview.RoundedImageView
                         android:layout_width="@dimen/_16sdp"
                         android:layout_height="@dimen/_16sdp"
-                        android:background="@color/black"
                         android:scaleType="centerCrop"
                         android:src="@drawable/background_image"
                         app:riv_oval="true" />
@@ -84,7 +86,6 @@
                     android:orientation="vertical">
 
                     <TextView
-                        android:textColor="@color/white"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/_4sdp"
@@ -92,10 +93,10 @@
                         android:ellipsize="end"
                         android:maxLines="1"
                         android:text="User Name 1"
+                        android:textColor="@color/white"
                         android:textSize="@dimen/_8ssp" />
 
                     <TextView
-                        android:textColor="#999"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/_4sdp"
@@ -103,6 +104,7 @@
                         android:ellipsize="end"
                         android:maxLines="1"
                         android:text="last message"
+                        android:textColor="#999"
                         android:textSize="@dimen/_6ssp" />
                 </LinearLayout>
             </LinearLayout>
@@ -116,14 +118,14 @@
                 android:orientation="horizontal">
 
                 <FrameLayout
+                    android:background="@color/background_dark_mode"
                     android:layout_width="@dimen/_16sdp"
                     android:layout_height="@dimen/_16sdp"
-                    android:layout_marginStart="@dimen/_2sdp">
+                    >
 
                     <com.makeramen.roundedimageview.RoundedImageView
                         android:layout_width="@dimen/_16sdp"
                         android:layout_height="@dimen/_16sdp"
-                        android:background="@color/black"
                         android:scaleType="centerCrop"
                         android:src="@drawable/background_image"
                         app:riv_oval="true" />
@@ -142,7 +144,6 @@
                     android:orientation="vertical">
 
                     <TextView
-                        android:textColor="@color/white"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/_4sdp"
@@ -150,10 +151,10 @@
                         android:ellipsize="end"
                         android:maxLines="1"
                         android:text="User Name 2"
+                        android:textColor="@color/white"
                         android:textSize="@dimen/_8ssp" />
 
                     <TextView
-                        android:textColor="#999"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/_4sdp"
@@ -161,6 +162,7 @@
                         android:ellipsize="end"
                         android:maxLines="1"
                         android:text="last message"
+                        android:textColor="#999"
                         android:textSize="@dimen/_6ssp" />
                 </LinearLayout>
             </LinearLayout>
@@ -174,14 +176,15 @@
                 android:orientation="horizontal">
 
                 <FrameLayout
+                    android:background="@color/background_dark_mode"
+
                     android:layout_width="@dimen/_16sdp"
                     android:layout_height="@dimen/_16sdp"
-                    android:layout_marginStart="@dimen/_2sdp">
+                    >
 
                     <com.makeramen.roundedimageview.RoundedImageView
                         android:layout_width="@dimen/_16sdp"
                         android:layout_height="@dimen/_16sdp"
-                        android:background="@color/black"
                         android:scaleType="centerCrop"
                         android:src="@drawable/background_image"
                         app:riv_oval="true" />
@@ -200,7 +203,6 @@
                     android:orientation="vertical">
 
                     <TextView
-                        android:textColor="@color/white"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/_4sdp"
@@ -208,10 +210,10 @@
                         android:ellipsize="end"
                         android:maxLines="1"
                         android:text="User Name 3"
+                        android:textColor="@color/white"
                         android:textSize="@dimen/_8ssp" />
 
                     <TextView
-                        android:textColor="#999"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/_4sdp"
@@ -219,6 +221,7 @@
                         android:ellipsize="end"
                         android:maxLines="1"
                         android:text="last message"
+                        android:textColor="#999"
                         android:textSize="@dimen/_6ssp" />
                 </LinearLayout>
             </LinearLayout>
@@ -232,14 +235,15 @@
                 android:orientation="horizontal">
 
                 <FrameLayout
+                    android:background="@color/background_dark_mode"
+
                     android:layout_width="@dimen/_16sdp"
                     android:layout_height="@dimen/_16sdp"
-                    android:layout_marginStart="@dimen/_2sdp">
+                    >
 
                     <com.makeramen.roundedimageview.RoundedImageView
                         android:layout_width="@dimen/_16sdp"
                         android:layout_height="@dimen/_16sdp"
-                        android:background="@color/black"
                         android:scaleType="centerCrop"
                         android:src="@drawable/background_image"
                         app:riv_oval="true" />
@@ -258,7 +262,6 @@
                     android:orientation="vertical">
 
                     <TextView
-                        android:textColor="@color/white"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/_4sdp"
@@ -266,10 +269,10 @@
                         android:ellipsize="end"
                         android:maxLines="1"
                         android:text="User Name 4"
+                        android:textColor="@color/white"
                         android:textSize="@dimen/_8ssp" />
 
                     <TextView
-                        android:textColor="#999"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/_4sdp"
@@ -277,6 +280,7 @@
                         android:ellipsize="end"
                         android:maxLines="1"
                         android:text="last message"
+                        android:textColor="#999"
                         android:textSize="@dimen/_6ssp" />
                 </LinearLayout>
             </LinearLayout>

@@ -4,31 +4,26 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="@dimen/_8sdp">
+    android:padding="@dimen/_8sdp"
+    style="@style/MAIN_CONTENT_BACKGROUND">
     <FrameLayout
         android:id="@+id/frame"
-        android:layout_width="@dimen/_35sdp"
-        android:layout_height="@dimen/_35sdp"
+        android:layout_width="@dimen/_39sdp"
+        android:layout_height="@dimen/_39sdp"
+        android:background="@drawable/frame_user"
         tools:ignore="MissingConstraints">
     <com.makeramen.roundedimageview.RoundedImageView
         android:id="@+id/imageProfile"
         android:layout_width="@dimen/_35sdp"
         android:layout_height="@dimen/_35sdp"
-        android:background="@color/white"
+        android:layout_marginStart="@dimen/_2sdp"
+        android:layout_marginTop="@dimen/_2sdp"
         android:scaleType="centerCrop"
-        android:src="@drawable/phg2"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="@id/frame"
+        app:layout_constraintBottom_toBottomOf="@id/frame"
+
         app:riv_oval="true"
         />
-        <TextView
-            android:id="@+id/activeStatus"
-            android:layout_width="@dimen/_12sdp"
-            android:layout_height="@dimen/_12sdp"
-            android:background="@drawable/background_status_active"
-            android:layout_marginLeft="@dimen/_24sdp"
-            android:layout_marginTop="@dimen/_24sdp"
-            />
     </FrameLayout>
 <!--    <TextView-->
 <!--        android:id="@+id/activeStatus"-->
@@ -49,7 +44,7 @@
         tools:ignore="NotSibling" />
 
     <TextView
-        android:text="HAHAHAHAHHA"
+        style="@style/PRIMARY_TEXT"
         android:id="@+id/textName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -57,22 +52,20 @@
         android:layout_marginEnd="@dimen/_8sdp"
         android:ellipsize="end"
         android:maxLines="1"
-        android:textColor="@color/primary_text"
         android:textSize="@dimen/_13ssp"
         app:layout_constraintBottom_toTopOf="@id/viewSupporter"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/frame"/>
 
     <TextView
+        style="@style/SECONDARY_TEXT"
         android:id="@+id/textRecentMessage"
         android:layout_width="0dp"
-        android:text="asdasdasdasdas"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/_8sdp"
         android:layout_marginEnd="@dimen/_8sdp"
         android:ellipsize="end"
         android:maxLines="1"
-        android:textColor="@color/secondary_text"
         android:textSize="@dimen/_12ssp"
         app:layout_constraintTop_toBottomOf="@id/viewSupporter"
         app:layout_constraintEnd_toEndOf="parent"
