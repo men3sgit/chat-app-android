@@ -759,7 +759,7 @@ public class ChatActivity extends BaseActivity {
                     .addOnSuccessListener(taskSnapshot -> {
                         // Xử lý khi upload thành công
                         showToast("Send Video success!");
-//                  Log.d(TAG, "Upload success: " + taskSnapshot.getMetadata().getPath());
+                  Log.d(TAG, "Upload success: " + taskSnapshot.getMetadata().getPath());
                         HashMap<String, Object> message = new HashMap<>();
                         message.put(Constants.KEY_SENDER_ID, preferenceManager.getString(Constants.KEY_USER_ID));
                         message.put(Constants.KEY_RECEIVER_ID, receiverUser.id);
@@ -828,9 +828,9 @@ public class ChatActivity extends BaseActivity {
 
             @Override
             public void onFinish(long recordTime, boolean limitReached) {
-                //Stop Recording..
-                //limitReached to determine if the Record was finished when time limit reached.
-//                showToast("Finish: "+recordTime);
+//                Stop Recording..
+//                limitReached to determine if the Record was finished when time limit reached.
+                showToast("Finish: "+recordTime);
 
                 mediaRecorder.stop();
                 mediaRecorder.release();
@@ -882,7 +882,7 @@ public class ChatActivity extends BaseActivity {
                 .addOnSuccessListener(taskSnapshot -> {
                     // Xử lý khi upload thành công
                     showToast("Send Record success!");
-//                  Log.d(TAG, "Upload success: " + taskSnapshot.getMetadata().getPath());
+                    Log.d(TAG, "Upload success: " + taskSnapshot.getMetadata().getPath());
                     HashMap<String, Object> message = new HashMap<>();
                     message.put(Constants.KEY_SENDER_ID, preferenceManager.getString(Constants.KEY_USER_ID));
                     message.put(Constants.KEY_RECEIVER_ID, receiverUser.id);
