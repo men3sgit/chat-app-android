@@ -4,7 +4,9 @@ package com.example.chat_app.activities;
 import static android.content.ContentValues.TAG;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -101,6 +103,7 @@ public class ChatActivity extends BaseActivity {
     private static final int IMAGE_PICKER_REQUEST = 1;
     private MediaRecorder mediaRecorder;
     private String audioPath;
+    private Boolean smooth=false;
    private ZegoSendCallInvitationButton voiceCallBtn, videoCallBtn;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -121,8 +124,8 @@ public class ChatActivity extends BaseActivity {
         database = FirebaseFirestore.getInstance();
 
         databaseStore = FirebaseStorage.getInstance();
-//        voiceCallBtn = findViewById(R.id.imageCall);
-//        videoCallBtn = findViewById(R.id.imageVideoCall);
+        voiceCallBtn = findViewById(R.id.imageCall);
+        videoCallBtn = findViewById(R.id.imageVideoCall);
 
         database.collection(Constants.KEY_COLLECTION_USERS).document(receiverUser.id).get().addOnCompleteListener(task -> {
             if (task.isSuccessful() && task.getResult() != null) {
@@ -144,8 +147,8 @@ public class ChatActivity extends BaseActivity {
         HashMap<String, Object> message = new HashMap<>();
         message.put(Constants.KEY_SENDER_ID, preferenceManager.getString(Constants.KEY_USER_ID));
         message.put(Constants.KEY_RECEIVER_ID, receiverUser.id);
-//        message.put(Constants.KEY_TYPE, Constants.KEY_TEXT_MESS);
-        message.put(Constants.KEY_MESSAGE, binding.inputMessage.getText().toString());
+        message.put(Constants.KEY_TYPE, Constants.KEY_TEXT_MESS);
+        message.put(Constants.KEY_MESSAGE, binding.inputMessage.getText().toString().trim());
         message.put(Constants.KEY_TIMESTAMP, new Date());
         database.collection(Constants.KEY_COLLECTION_CHAT).add(message);
         if(conversionId!=null){
@@ -159,7 +162,7 @@ public class ChatActivity extends BaseActivity {
             conversion.put(Constants.KEY_RECEIVER_ID, receiverUser.id);
             conversion.put(Constants.KEY_RECEIVER_NAME, receiverUser.name);
             conversion.put(Constants.KEY_RECEIVER_IMAGE, receiverUser.image);
-            conversion.put(Constants.KEY_LAST_MESSAGE, binding.inputMessage.getText().toString());
+            conversion.put(Constants.KEY_LAST_MESSAGE, binding.inputMessage.getText().toString().trim());
             conversion.put(Constants.KEY_TIMESTAMP, new Date());
             addConversion(conversion);
         }
@@ -177,7 +180,6 @@ public class ChatActivity extends BaseActivity {
                 JSONObject body = new JSONObject();
                 body.put(Constants.REMOTE_MSG_DATA, data);
                 body.put(Constants.REMOTE_MSG_REGISTRATION_IDS, tokens);
-
                 sendNotification(body.toString());
             }
             catch (Exception e){
@@ -281,6 +283,9 @@ public class ChatActivity extends BaseActivity {
             chatMessages.sort(Comparator.comparing(obj -> obj.dateObject));
             if(count == 0){
                 chatAdapter.notifyDataSetChanged();
+            }
+            else if(smooth){
+                smooth = false;
             }
             else{
                 chatAdapter.notifyItemRangeInserted(chatMessages.size(), chatMessages.size());
@@ -387,6 +392,72 @@ public class ChatActivity extends BaseActivity {
             startActivity(intent);
         });
 
+        //Sự kiện đè tin nhắn để thu hồi tin nhắn
+        chatAdapter.setOnItemLongClickListener(new ChatAdapter.OnItemLongClickListener() {
+            @Override
+            public void onItemLongClick(View view, int position) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(ChatActivity.this);
+                builder.setMessage("Are you sure you want to revoke this message?")
+                        .setCancelable(true)
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                // Thực hiện thao tác thu hồi tin nhắn ở đây
+                                //Với người nhắn
+                                database.collection(Constants.KEY_COLLECTION_CHAT).whereEqualTo(Constants.KEY_SENDER_ID, preferenceManager.getString(Constants.KEY_USER_ID))
+                                        .whereEqualTo(Constants.KEY_RECEIVER_ID, receiverUser.id)
+                                        .whereEqualTo(Constants.KEY_TIMESTAMP, chatMessages.get(position).dateObject)
+                                        .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                if (task.isSuccessful()) {
+                                                    for (QueryDocumentSnapshot document : task.getResult()) {
+                                                        //Sửa thông tin trên firebase, sửa type thành text và thông tin là đã thu hồi tin nhắn
+                                                        String docId = document.getId();
+                                                        database.collection(Constants.KEY_COLLECTION_CHAT).document(docId).update(Constants.KEY_TYPE, Constants.KEY_RECALL);
+                                                        showToast("Message revoke successful");
+                                                    }
+                                                } else {
+                                                    showToast("Message revoke failed");
+                                                }
+                                            }
+                                        });
+                                //Với người nhận
+                                database.collection(Constants.KEY_COLLECTION_CHAT).whereEqualTo(Constants.KEY_SENDER_ID, receiverUser.id)
+                                        .whereEqualTo(Constants.KEY_RECEIVER_ID, preferenceManager.getString(Constants.KEY_USER_ID))
+                                        .whereEqualTo(Constants.KEY_TIMESTAMP, chatMessages.get(position).dateObject)
+                                        .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                if (task.isSuccessful()) {
+                                                    for (QueryDocumentSnapshot document : task.getResult()) {
+                                                        //Sửa thông tin trên firebase, sửa type thành text và thông tin là đã thu hồi tin nhắn
+                                                        String docId = document.getId();
+                                                        database.collection(Constants.KEY_COLLECTION_CHAT).document(docId).update(Constants.KEY_TYPE, Constants.KEY_TEXT_MESS);
+//                                                        showToast("Message revoke successful");
+                                                    }
+                                                } else {
+//                                                    showToast("Message revoke failed");
+                                                }
+                                            }
+                                        });
+                                smooth=true;
+                                chatMessages.get(position).type = Constants.KEY_RECALL;
+                                chatAdapter.notifyItemChanged(position);
+                                binding.chatRecyclerView.smoothScrollToPosition(position);
+                            }
+                        }
+                        )
+                        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        });
+                AlertDialog alert = builder.create();
+                alert.show();
+                //Hiển thị ngoài hộp thoại chat
+                updateConversion("*Message has been withdrawn");
+            }
+        });
 
     }
 
@@ -604,7 +675,7 @@ public class ChatActivity extends BaseActivity {
                         HashMap<String, Object> message = new HashMap<>();
                         message.put(Constants.KEY_SENDER_ID, preferenceManager.getString(Constants.KEY_USER_ID));
                         message.put(Constants.KEY_RECEIVER_ID, receiverUser.id);
-//                        message.put(Constants.KEY_TYPE, Constants.KEY_VIDEO_MESS);
+                        message.put(Constants.KEY_TYPE, Constants.KEY_VIDEO_MESS);
                         message.put(Constants.KEY_MESSAGE, "videos/" + getNameFile(uri));
                         message.put(Constants.KEY_TIMESTAMP, new Date());
                         database.collection(Constants.KEY_COLLECTION_CHAT).add(message);
@@ -707,7 +778,6 @@ public class ChatActivity extends BaseActivity {
         mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
         mediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
         audioPath= getCacheDir().getAbsolutePath() + "/"+ UUID.randomUUID()+".mp4";
-        System.out.println(audioPath);
         mediaRecorder.setOutputFile(audioPath);
     }
 

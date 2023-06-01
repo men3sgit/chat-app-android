@@ -22,7 +22,7 @@
         <item name="color">#666</item>
     </style>
     <style name="SCREEN">
-        <item name="background">#eee</item>
+        <item name="android:background">#eee</item>
     </style>
     <style name="BLANK">
         <item name="android:background">#DDD</item>

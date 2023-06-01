@@ -36,8 +36,6 @@ public class Constants {
     public static final String KEY_NO_DATA = "No data";
     public static final int AVAILABILITY = 1;
     public static final int UNAVAILABILITY = 0;
-    public static final String KEY_VIDEO_MESS = "A";
-    public static final String KEY_TEXT_MESS = "B";
     public static HashMap<String, String> remoteMsgHeaders = null;
     public static HashMap<String, String> getRemoteMsgHeaders(){
         if(remoteMsgHeaders == null){
@@ -53,6 +51,7 @@ public class Constants {
     public static final String KEY_TEXT_MESS = "text";
     public static final String KEY_VIDEO_MESS = "video";
     public static final String KEY_RECORD_MESS = "record";
+    public static final String KEY_RECALL = "recall";
 
 
 }
