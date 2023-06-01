@@ -22,7 +22,9 @@
         <item name="android:textColor">@color/secondary_light</item>
     </style>
     <style name="SCREEN">
+
         <item name="android:background">@color/background_light_mode</item>
+
     </style>
     <style name="BLANK">
         <item name="android:background">@color/blank_light</item>

@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
-    android:background="@color/alpha_white"
+    android:background="@drawable/background_gradients"
     android:id="@+id/mainLayout"
     tools:context=".activities.ChatActivity">
 
@@ -15,7 +15,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginBottom="@dimen/_16sdp"
-        android:background="@color/white"
+        android:background="@android:color/transparent"
         app:layout_constraintBottom_toTopOf="@id/layoutSend"
         app:layout_constraintTop_toTopOf="parent"/>
 
@@ -23,7 +23,8 @@
         android:id="@+id/headerBackground"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:background="@color/alpha_white"
+        android:background="@color/pink"
+        android:alpha="0.3"
         app:layout_constraintBottom_toTopOf="@id/viewSupporter"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0"
@@ -159,18 +160,18 @@
             android:layout_marginLeft="@dimen/_4sdp"
             android:padding="@dimen/_8sdp"
             android:src="@drawable/ic_send"
-            android:tint="@color/pink"
+            android:tint="@color/white"
             />
-        <com.devlomi.record_view.RecordButton
-            android:id="@+id/backRecord"
-            android:contentDescription="mic"
-            android:layout_width="50dp"
-            android:padding="@dimen/_8sdp"
-            android:layout_height="match_parent"
-            android:layout_gravity="center|bottom"
-            app:mic_icon="@drawable/ic_mic_white"
-            android:visibility="gone"
-            tools:ignore="MissingClass" />
+<!--        <com.devlomi.record_view.RecordButton-->
+<!--            android:id="@+id/backRecord"-->
+<!--            android:contentDescription="mic"-->
+<!--            android:layout_width="50dp"-->
+<!--            android:padding="@dimen/_8sdp"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:layout_gravity="center|bottom"-->
+<!--            app:mic_icon="@drawable/ic_mic_white"-->
+<!--            android:visibility="gone"-->
+<!--            />-->
     </FrameLayout>
     <RelativeLayout
         android:id="@+id/sendRecord"
@@ -190,7 +191,7 @@
             app:slide_to_cancel_margin_right="10dp"
             app:slide_to_cancel_text="Slide To Cancel"
             app:counter_time_color="#ff0000"
-            tools:ignore="MissingClass" />
+            />
 
         <com.devlomi.record_view.RecordButton
             android:id="@+id/record_button"
@@ -219,7 +220,7 @@
             android:layout_height="match_parent"
             android:padding="@dimen/_10sdp"
             android:src="@drawable/ic_more"
-            android:tint="@color/pink"/>
+            android:tint="@color/white"/>
 
     </FrameLayout>
     <EditText
@@ -247,17 +248,18 @@
         app:layout_constraintStart_toEndOf="@id/layoutMore"
         />
 
-    <com.devlomi.record_view.RecordView
-        android:id="@+id/recordView"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:slide_to_cancel_arrow="@drawable/recv_ic_arrow"
-        app:slide_to_cancel_arrow_color="@color/black"
-        app:slide_to_cancel_text="slide to cancel"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/viewBackground"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/layoutSend"/>
+<!--    <com.devlomi.record_view.RecordView-->
+<!--        android:id="@+id/recordView"-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        app:slide_to_cancel_arrow="@drawable/recv_ic_arrow"-->
+<!--        app:slide_to_cancel_arrow_color="@color/black"-->
+<!--        app:slide_to_cancel_text="slide to cancel"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@id/viewBackground"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintEnd_toStartOf="@id/layoutSend"/>-->
+
 
 
 
