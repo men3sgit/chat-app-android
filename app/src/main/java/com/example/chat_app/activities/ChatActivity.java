@@ -5,6 +5,7 @@ import static android.content.ContentValues.TAG;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -23,6 +24,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,6 +42,8 @@ import com.example.chat_app.network.ApiService;
 import com.example.chat_app.utilities.Constants;
 import com.example.chat_app.utilities.PreferenceManager;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.firebase.firestore.DocumentChange;
@@ -58,6 +62,7 @@ import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
+import com.squareup.picasso.Picasso;
 import com.zegocloud.uikit.prebuilt.call.invite.widget.ZegoSendCallInvitationButton;
 import com.zegocloud.uikit.service.defines.ZegoUIKitUser;
 
@@ -167,28 +172,29 @@ public class ChatActivity extends BaseActivity {
             addConversion(conversion);
         }
         if(!isReceiverAvailable){
-            try{
-                JSONArray tokens = new JSONArray();
-                tokens.put(receiverUser.token);
-
-                JSONObject data = new JSONObject();
-                data.put(Constants.KEY_USER_ID, preferenceManager.getString(Constants.KEY_USER_ID));
-                data.put(Constants.KEY_NAME, preferenceManager.getString(Constants.KEY_NAME));
-                data.put(Constants.KEY_FCM_TOKEN, preferenceManager.getString(Constants.KEY_FCM_TOKEN));
-                data.put(Constants.KEY_MESSAGE, binding.inputMessage.getText().toString());
-
-                JSONObject body = new JSONObject();
-                body.put(Constants.REMOTE_MSG_DATA, data);
-                body.put(Constants.REMOTE_MSG_REGISTRATION_IDS, tokens);
-                sendNotification(body.toString());
-            }
-            catch (Exception e){
-                showToast("Error o chatactivity: "+ e.getMessage());
-            }
+            configNotification(binding.inputMessage.getText().toString());
         }
         binding.inputMessage.setText(null);
     }
+    private void configNotification(String mess){
+        try{
+            JSONArray tokens = new JSONArray();
+            tokens.put(receiverUser.token);
+            JSONObject data = new JSONObject();
+            data.put(Constants.KEY_USER_ID, preferenceManager.getString(Constants.KEY_USER_ID));
+            data.put(Constants.KEY_NAME, preferenceManager.getString(Constants.KEY_NAME));
+            data.put(Constants.KEY_FCM_TOKEN, preferenceManager.getString(Constants.KEY_FCM_TOKEN));
+            data.put(Constants.KEY_MESSAGE, mess);
 
+            JSONObject body = new JSONObject();
+            body.put(Constants.REMOTE_MSG_DATA, data);
+            body.put(Constants.REMOTE_MSG_REGISTRATION_IDS, tokens);
+            sendNotification(body.toString());
+        }
+        catch (Exception e){
+            showToast("Error o chatactivity: "+ e.getMessage());
+        }
+    }
     private void showToast(String message) {
         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
     }
@@ -391,13 +397,34 @@ public class ChatActivity extends BaseActivity {
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
         });
-
+        chatAdapter.setOnItemClickListener(new ChatAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                Dialog dialog = new Dialog(ChatActivity.this);
+                dialog.setContentView(R.layout.custom_dialog_image);
+                ImageView imageView = dialog.findViewById(R.id.image);
+                StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+                StorageReference imageRef = storageRef.child(chatMessages.get(position).message);
+                imageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+                        Picasso.get().load(uri.toString()).into(imageView);
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                        // Handle any errors
+                    }
+                });
+                dialog.show();
+            }
+        });
         //Sự kiện đè tin nhắn để thu hồi tin nhắn
         chatAdapter.setOnItemLongClickListener(new ChatAdapter.OnItemLongClickListener() {
             @Override
             public void onItemLongClick(View view, int position) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(ChatActivity.this);
-                builder.setMessage("Are you sure you want to revoke this message?")
+                builder.setMessage("Are you sure you want to unsent this message?")
                         .setCancelable(true)
                         .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
@@ -414,10 +441,11 @@ public class ChatActivity extends BaseActivity {
                                                         //Sửa thông tin trên firebase, sửa type thành text và thông tin là đã thu hồi tin nhắn
                                                         String docId = document.getId();
                                                         database.collection(Constants.KEY_COLLECTION_CHAT).document(docId).update(Constants.KEY_TYPE, Constants.KEY_RECALL);
-                                                        showToast("Message revoke successful");
+                                                        database.collection(Constants.KEY_COLLECTION_CHAT).document(docId).update(Constants.KEY_MESSAGE, "You unsent a message");
+                                                        showToast("Message unsent successful");
                                                     }
                                                 } else {
-                                                    showToast("Message revoke failed");
+                                                    showToast("Message unsent failed");
                                                 }
                                             }
                                         });
@@ -433,10 +461,9 @@ public class ChatActivity extends BaseActivity {
                                                         //Sửa thông tin trên firebase, sửa type thành text và thông tin là đã thu hồi tin nhắn
                                                         String docId = document.getId();
                                                         database.collection(Constants.KEY_COLLECTION_CHAT).document(docId).update(Constants.KEY_TYPE, Constants.KEY_TEXT_MESS);
-//                                                        showToast("Message revoke successful");
+                                                        database.collection(Constants.KEY_COLLECTION_CHAT).document(docId).update(Constants.KEY_MESSAGE, "You unsent a meessage");
                                                     }
                                                 } else {
-//                                                    showToast("Message revoke failed");
                                                 }
                                             }
                                         });
@@ -444,6 +471,9 @@ public class ChatActivity extends BaseActivity {
                                 chatMessages.get(position).type = Constants.KEY_RECALL;
                                 chatAdapter.notifyItemChanged(position);
                                 binding.chatRecyclerView.smoothScrollToPosition(position);
+                                if(!isReceiverAvailable){
+                                    configNotification("You unsent a message");
+                                }
                             }
                         }
                         )
@@ -455,10 +485,65 @@ public class ChatActivity extends BaseActivity {
                 AlertDialog alert = builder.create();
                 alert.show();
                 //Hiển thị ngoài hộp thoại chat
-                updateConversion("*Message has been withdrawn");
+                updateConversion("*Message has been unsent");
             }
         });
-
+        //Sự kiện ấn voiceCall
+        voiceCallBtn.setOnClickListener(v->{
+            HashMap<String, Object> message = new HashMap<>();
+            message.put(Constants.KEY_SENDER_ID, preferenceManager.getString(Constants.KEY_USER_ID));
+            message.put(Constants.KEY_RECEIVER_ID, receiverUser.id);
+            message.put(Constants.KEY_TYPE, Constants.KEY_RECALL);
+            message.put(Constants.KEY_MESSAGE, "*AudioCall");
+            message.put(Constants.KEY_TIMESTAMP, new Date());
+            database.collection(Constants.KEY_COLLECTION_CHAT).add(message);
+            if(conversionId!=null){
+                updateConversion("*AudioCall");
+            }
+            else{
+                HashMap<String, Object> conversion = new HashMap<>();
+                conversion.put(Constants.KEY_SENDER_ID, preferenceManager.getString(Constants.KEY_USER_ID));
+                conversion.put(Constants.KEY_SENDER_NAME, preferenceManager.getString(Constants.KEY_NAME));
+                conversion.put(Constants.KEY_SENDER_IMAGE, preferenceManager.getString(Constants.KEY_IMAGE));
+                conversion.put(Constants.KEY_RECEIVER_ID, receiverUser.id);
+                conversion.put(Constants.KEY_RECEIVER_NAME, receiverUser.name);
+                conversion.put(Constants.KEY_RECEIVER_IMAGE, receiverUser.image);
+                conversion.put(Constants.KEY_LAST_MESSAGE, "*AudioCall");
+                conversion.put(Constants.KEY_TIMESTAMP, new Date());
+                addConversion(conversion);
+            }
+            if(!isReceiverAvailable){
+                configNotification("Audio Call");
+            }
+        });
+        //Sự kiện ấn videoCall
+        videoCallBtn.setOnClickListener(v->{
+            HashMap<String, Object> message = new HashMap<>();
+            message.put(Constants.KEY_SENDER_ID, preferenceManager.getString(Constants.KEY_USER_ID));
+            message.put(Constants.KEY_RECEIVER_ID, receiverUser.id);
+            message.put(Constants.KEY_TYPE, Constants.KEY_RECALL);
+            message.put(Constants.KEY_MESSAGE, "*VideoCall");
+            message.put(Constants.KEY_TIMESTAMP, new Date());
+            database.collection(Constants.KEY_COLLECTION_CHAT).add(message);
+            if(conversionId!=null){
+                updateConversion("*VideoCall");
+            }
+            else{
+                HashMap<String, Object> conversion = new HashMap<>();
+                conversion.put(Constants.KEY_SENDER_ID, preferenceManager.getString(Constants.KEY_USER_ID));
+                conversion.put(Constants.KEY_SENDER_NAME, preferenceManager.getString(Constants.KEY_NAME));
+                conversion.put(Constants.KEY_SENDER_IMAGE, preferenceManager.getString(Constants.KEY_IMAGE));
+                conversion.put(Constants.KEY_RECEIVER_ID, receiverUser.id);
+                conversion.put(Constants.KEY_RECEIVER_NAME, receiverUser.name);
+                conversion.put(Constants.KEY_RECEIVER_IMAGE, receiverUser.image);
+                conversion.put(Constants.KEY_LAST_MESSAGE, "*VideoCall");
+                conversion.put(Constants.KEY_TIMESTAMP, new Date());
+                addConversion(conversion);
+            }
+            if(!isReceiverAvailable){
+                configNotification("Video Call");
+            }
+        });
     }
 
 
@@ -605,6 +690,9 @@ public class ChatActivity extends BaseActivity {
                             conversion.put(Constants.KEY_TIMESTAMP, new Date());
                             addConversion(conversion);
                         }
+                        if(!isReceiverAvailable){
+                            configNotification("Sent pictures");
+                        }
                     })
                     .addOnFailureListener(exception -> {
                         showToast("Send Image Failed!!");
@@ -693,6 +781,9 @@ public class ChatActivity extends BaseActivity {
                             conversion.put(Constants.KEY_LAST_MESSAGE, "Sent Video");
                             conversion.put(Constants.KEY_TIMESTAMP, new Date());
                             addConversion(conversion);
+                        }
+                        if(!isReceiverAvailable){
+                            configNotification("Sent Video");
                         }
                     })
                     .addOnFailureListener(exception -> {
@@ -813,6 +904,9 @@ public class ChatActivity extends BaseActivity {
                         conversion.put(Constants.KEY_LAST_MESSAGE, "Sent Record");
                         conversion.put(Constants.KEY_TIMESTAMP, new Date());
                         addConversion(conversion);
+                    }
+                    if(!isReceiverAvailable){
+                        configNotification("Sent Record");
                     }
                 })
                 .addOnFailureListener(exception -> {

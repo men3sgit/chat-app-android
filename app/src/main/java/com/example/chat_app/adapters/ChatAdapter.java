@@ -5,6 +5,7 @@ import static com.example.chat_app.utilities.Render.renderingBitmap;
 
 import android.annotation.SuppressLint;
 import android.app.Application;
+import android.app.Dialog;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Handler;
@@ -13,10 +14,14 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.chat_app.R;
+import com.example.chat_app.activities.ChatActivity;
+import com.example.chat_app.activities.ProfileActivity;
 import com.example.chat_app.databinding.ItemContainerReceivedImageBinding;
 import com.example.chat_app.databinding.ItemContainerReceivedMessageBinding;
 import com.example.chat_app.databinding.ItemContainerReceivedRecallBinding;
@@ -68,8 +73,12 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
     public static final int VIEW_TYPE_RECEIVED_RECALL = 10;
     private final Application application;
     private OnItemLongClickListener onItemLongClickListener;
+    private OnItemClickListener onItemClickListener;
     public void setOnItemLongClickListener(OnItemLongClickListener onItem){
         this.onItemLongClickListener = onItem;
+    }
+    public void setOnItemClickListener(OnItemClickListener onItem){
+        this.onItemClickListener = onItem;
     }
 
     public void setReceiverProfileImage(Bitmap bitmap){
@@ -143,6 +152,14 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
                         onItemLongClickListener.onItemLongClick(v, position);
                     }
                     return true;
+                }
+            });
+            ((SentImageViewHolder) holder).binding.imageMessage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (onItemClickListener != null) {
+                        onItemClickListener.onItemClick(view, position);
+                    }
                 }
             });
         }
@@ -352,7 +369,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
         }
 
         void setData(ChatMessage chatMessage, Application application){
-            binding.textRecall.setText("*Message has been withdrawn");
+            binding.textRecall.setText(chatMessage.message);
             binding.textDateTime.setText(chatMessage.dateTime);
         }
     }
@@ -481,7 +498,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
         }
 
         void setData(ChatMessage chatMessage, Bitmap receivedMessage, Application application){
-            binding.textRecall.setText("*Message has been withdrawn");
+            binding.textRecall.setText(chatMessage.message);
             binding.textDateTime.setText(chatMessage.dateTime);
             if(receivedMessage != null){
                 binding.imageProfile.setImageBitmap(receivedMessage);
@@ -508,5 +525,8 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
     }
     public interface OnItemLongClickListener {
         void onItemLongClick(View view, int position);
+    }
+    public interface OnItemClickListener{
+        void onItemClick(View view, int position);
     }
 }
