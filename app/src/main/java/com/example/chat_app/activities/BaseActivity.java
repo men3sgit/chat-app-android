@@ -31,5 +31,6 @@ public class BaseActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         documentReference.update(Constants.KEY_AVAILABILITY, Constants.AVAILABILITY);
+        System.out.println(33333);
     }
 }
