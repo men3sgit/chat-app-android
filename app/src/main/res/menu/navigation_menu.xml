@@ -4,14 +4,8 @@
         android:id="@+id/menuProfile"
         android:icon="@drawable/profile"
         android:title="@string/profile" />
-    <item
-        android:id="@+id/menuNotification"
-        android:icon="@drawable/notification"
-        android:title="@string/notifications" />
-    <item
-        android:id="@+id/menuArchive"
-        android:icon="@drawable/archive"
-        android:title="@string/archive"/>
+
+
     <item
         android:id="@+id/menuHome"
         android:icon="@drawable/home"
@@ -26,10 +20,6 @@
                 android:id="@+id/menuSetting"
                 android:icon="@drawable/setting"
                 android:title="@string/setting" />
-            <item
-                android:id="@+id/menuShare"
-                android:icon="@drawable/share"
-                android:title="@string/share" />
         </menu>
     </item>
 

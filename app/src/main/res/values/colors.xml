@@ -15,4 +15,19 @@
     <color name="active">#0DF10D</color>
     <color name="busy">#D11A29</color>
     <color name="color_default_cover_background">#222</color>
+    <color name="background_add">#ececec</color>
+    <color name="alpha_white">#8dfcfcfc</color>
+    <color name="container_message">#8DD8D1D1</color>
+
+<!--    light mode-->
+    <color name="background_light_mode">#f4f4f5</color>
+    <color name="primary_light">#1c1c1c</color>
+    <color name="secondary_light">#5a5a5a</color>
+    <color name="blank_light">#dcdcdc</color>
+
+<!--    dark mode-->
+    <color name="background_dark_mode">#323232</color>
+    <color name="primary_text_dark">#fdfdfd</color>
+    <color name="secondary_text_dark">#aaaaac</color>
+    <color name="blank_dark">#111</color>
 </resources>
