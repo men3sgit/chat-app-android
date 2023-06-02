@@ -472,6 +472,8 @@ public class ChatActivity extends BaseActivity {
                                 chatMessages.get(position).type = Constants.KEY_RECALL;
                                 chatAdapter.notifyItemChanged(position);
                                 binding.chatRecyclerView.smoothScrollToPosition(position);
+                                //Hiển thị ngoài hộp thoại chat
+                                updateConversion("*Message has been unsent");
                                 if(!isReceiverAvailable){
                                     configNotification("You unsent a message");
                                 }
@@ -485,8 +487,7 @@ public class ChatActivity extends BaseActivity {
                         });
                 AlertDialog alert = builder.create();
                 alert.show();
-                //Hiển thị ngoài hộp thoại chat
-                updateConversion("*Message has been unsent");
+
             }
         });
         //Sự kiện ấn voiceCall

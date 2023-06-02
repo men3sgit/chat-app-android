@@ -97,6 +97,7 @@ public class UsersActivity extends BaseActivity implements UserListener {
             if (!filteredByEmailList.isEmpty()) {
                 UsersAdapter usersAdapter = new UsersAdapter(filteredByEmailList, this);
                 binding.usersByEmailRecyclerView.setAdapter(usersAdapter);
+                binding.textTitleEmail.setText(R.string.email);
                 binding.textQtyEmail.setText(String.format("(%d)", filteredByEmailList.size()));
                 binding.usersByEmailRecyclerView.setVisibility(View.VISIBLE);
                 binding.layoutEmailData.setVisibility(View.VISIBLE);
