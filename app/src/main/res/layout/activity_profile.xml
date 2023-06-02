@@ -146,7 +146,9 @@
                 android:layout_height="@dimen/_28sdp"
                 android:id="@+id/editName"
                 style="@style/value_column"
-                android:text="Nguyen Thi Tu Linh" />
+                android:text="Nguyen Thi Tu Linh"
+                android:imeOptions="actionDone"
+                android:inputType="text"/>
         </TableRow>
 
         <TableRow android:layout_marginBottom="@dimen/_6sdp">
@@ -202,7 +204,9 @@
             <EditText
                 android:id="@+id/editPhoneNumber"
                 style="@style/value_column"
-                android:text="0377779999" />
+                android:text="0377779999"
+                android:imeOptions="actionDone"
+                android:inputType="number"/>
         </TableRow>
     </TableLayout>
 

@@ -121,7 +121,7 @@
         android:id="@+id/chatRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:clipToPadding="false"
+        android:clipToPadding="true"
         android:orientation="vertical"
         android:overScrollMode="never"
         android:padding="@dimen/_8sdp"
@@ -148,6 +148,7 @@
         android:layout_marginEnd="@dimen/_16sdp"
         android:layout_marginRight="@dimen/_16sdp"
         android:layout_marginBottom="@dimen/_12sdp"
+        android:backgroundTint="@color/pink"
         android:background="@drawable/background_chat_input"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent">
@@ -202,6 +203,7 @@
             android:background="@drawable/background_chat_input"
             android:scaleType="centerInside"
             app:mic_icon="@drawable/ic_mic_white"
+            android:backgroundTint="@color/pink"
             android:visibility="invisible"/>
     </RelativeLayout>
 
@@ -211,6 +213,7 @@
         android:layout_height="@dimen/_40sdp"
         android:layout_marginStart="@dimen/_9sdp"
         android:layout_marginBottom="@dimen/_12sdp"
+        android:backgroundTint="@color/pink"
         android:background="@drawable/background_chat_input"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toBottomOf="parent">

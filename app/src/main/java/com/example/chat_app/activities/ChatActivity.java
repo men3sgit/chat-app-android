@@ -461,13 +461,14 @@ public class ChatActivity extends BaseActivity {
                                                         //Sửa thông tin trên firebase, sửa type thành text và thông tin là đã thu hồi tin nhắn
                                                         String docId = document.getId();
                                                         database.collection(Constants.KEY_COLLECTION_CHAT).document(docId).update(Constants.KEY_TYPE, Constants.KEY_TEXT_MESS);
-                                                        database.collection(Constants.KEY_COLLECTION_CHAT).document(docId).update(Constants.KEY_MESSAGE, "You unsent a meessage");
+                                                        database.collection(Constants.KEY_COLLECTION_CHAT).document(docId).update(Constants.KEY_MESSAGE, "You unsent a messsage");
                                                     }
                                                 } else {
                                                 }
                                             }
                                         });
                                 smooth=true;
+                                chatMessages.get(position).message = "You unsent a message";
                                 chatMessages.get(position).type = Constants.KEY_RECALL;
                                 chatAdapter.notifyItemChanged(position);
                                 binding.chatRecyclerView.smoothScrollToPosition(position);

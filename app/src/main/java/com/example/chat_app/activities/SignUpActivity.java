@@ -1,7 +1,6 @@
 package com.example.chat_app.activities;
 
 import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContract;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -18,15 +17,12 @@ import android.util.Base64;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.DatePicker;
-import android.widget.EditText;
 import android.widget.Toast;
 
-import com.example.chat_app.R;
 import com.example.chat_app.databinding.ActivitySignUpBinding;
 import com.example.chat_app.utilities.Constants;
 import com.example.chat_app.utilities.PreferenceManager;
 import com.example.chat_app.utilities.ViewAdapter;
-import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
@@ -36,6 +32,7 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class SignUpActivity extends AppCompatActivity {
     private DatePickerDialog datePickerDialog;
@@ -54,22 +51,26 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     private void setListeners() {
-
+        //sự kiện trở về SignIn
         binding.textSignIn.setOnClickListener(view -> onBackPressed());
-
+        //sự kiến ấn button
         binding.buttonSignUp.setOnClickListener(v -> {
+                    //Kiểm tra hợp lệ hay không
                     if (isValidSignUpDetails())
                         signUp();
                 }
         );
+        //sự kiện chọn hình ảnh
         binding.layoutImage.setOnClickListener(v -> {
             Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
             intent.addFlags(Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
             pickImage.launch(intent);
         });
-
+        //sử kiện chọn ngày sinh nhật
         setButtonBirthDateListener();
+        //sự kiển hiện mật khẩu
         setShowPasswordListener();
+        //sự kiện ẩn mật khẩu
         setHidePasswordListener();
 
     }
@@ -142,39 +143,50 @@ public class SignUpActivity extends AppCompatActivity {
     private void showToast(String message) {
         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
     }
-
     // 7 attributes
     private void signUp() {
         loading(true);
         FirebaseFirestore database = FirebaseFirestore.getInstance();
-        HashMap<String, Object> user = new HashMap<>();
-        user.put(Constants.KEY_NAME, binding.inputName.getText().toString());
-        user.put(Constants.KEY_EMAIL, binding.inputEmail.getText().toString());
-        user.put(Constants.KEY_PASSWORD, binding.inputPassword.getText().toString());
-        user.put(Constants.KEY_IMAGE, encodedImage);
-        user.put(Constants.KEY_BIRTH_DATE, binding.buttonBirthDate.getText().toString());
-        user.put(Constants.KEY_GENDER, getGender());
-        user.put(Constants.KEY_PHONE_NUMBER,null);
-        database.collection(Constants.KEY_COLLECTION_USERS).add(user).addOnSuccessListener(documentReference -> {
-            loading(false);
-            preferenceManager.putBoolean(Constants.KEY_IS_SIGNED_IN, true);
-            preferenceManager.putString(Constants.KEY_USER_ID, documentReference.getId());
-            preferenceManager.putString(Constants.KEY_NAME, binding.inputName.getText().toString());
-            preferenceManager.putString(Constants.KEY_IMAGE, encodedImage);
-            preferenceManager.putString(Constants.KEY_EMAIL, binding.inputEmail.getText().toString());
-            preferenceManager.putString(Constants.KEY_BIRTH_DATE, binding.buttonBirthDate.getText().toString());
-            preferenceManager.putString(Constants.KEY_GENDER, getGender());
-            preferenceManager.putString(Constants.KEY_PHONE_NUMBER, null);
+        database.collection(Constants.KEY_COLLECTION_USERS).whereEqualTo(Constants.KEY_EMAIL, binding.inputEmail.getText().toString())
+                .get()
+                .addOnCompleteListener(task -> {
+                    //Email đã tồn tại trên hệ thống firebase
+                    if (task.isSuccessful() && task.getResult() != null
+                            && task.getResult().getDocumentChanges().size() > 0) {
+                        showToast("Email Exists");
+                        loading(false);
+                    }
+                    else{
+                        HashMap<String, Object> user = new HashMap<>();
+                        user.put(Constants.KEY_NAME, binding.inputName.getText().toString());
+                        user.put(Constants.KEY_EMAIL, binding.inputEmail.getText().toString());
+                        user.put(Constants.KEY_PASSWORD, binding.inputPassword.getText().toString());
+                        user.put(Constants.KEY_IMAGE, encodedImage);
+                        user.put(Constants.KEY_BIRTH_DATE, binding.buttonBirthDate.getText().toString());
+                        user.put(Constants.KEY_GENDER, getGender());
+                        user.put(Constants.KEY_PHONE_NUMBER,null);
+                        database.collection(Constants.KEY_COLLECTION_USERS).add(user).addOnSuccessListener(documentReference -> {
+                            loading(false);
+                            preferenceManager.putBoolean(Constants.KEY_IS_SIGNED_IN, true);
+                            preferenceManager.putString(Constants.KEY_USER_ID, documentReference.getId());
+                            preferenceManager.putString(Constants.KEY_NAME, binding.inputName.getText().toString());
+                            preferenceManager.putString(Constants.KEY_IMAGE, encodedImage);
+                            preferenceManager.putString(Constants.KEY_EMAIL, binding.inputEmail.getText().toString());
+                            preferenceManager.putString(Constants.KEY_BIRTH_DATE, binding.buttonBirthDate.getText().toString());
+                            preferenceManager.putString(Constants.KEY_GENDER, getGender());
+                            preferenceManager.putString(Constants.KEY_PHONE_NUMBER, null);
 
-            preferenceManager.putBoolean("NIGHT_MODE", false);
+                            preferenceManager.putBoolean("NIGHT_MODE", false);
 
-            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
-        }).addOnFailureListener(exception -> {
-            loading(false);
-            showToast(exception.getMessage());
-        });
+                            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            startActivity(intent);
+                        }).addOnFailureListener(exception -> {
+                            loading(false);
+                            showToast(exception.getMessage());
+                        });
+                    }
+                });
     }
 
     private String getGender() {
@@ -208,10 +220,8 @@ public class SignUpActivity extends AppCompatActivity {
                                 String encoded = Base64.encodeToString(byteArray, Base64.DEFAULT);
                                 encodedImage = encoded;
                             }
-
                             @Override
                             public void onBitmapFailed(Exception e, Drawable errorDrawable) {}
-
                             @Override
                             public void onPrepareLoad(Drawable placeHolderDrawable) {}
                         });
