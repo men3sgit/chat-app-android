@@ -30,7 +30,10 @@ android {
     buildFeatures{
         viewBinding true
     }
-
+    packagingOptions{
+        pickFirst 'META-INF/NOTICE.md'
+        pickFirst 'META-INF/LICENSE.md'
+    }
 }
 
 dependencies {
@@ -98,5 +101,9 @@ dependencies {
 
     //voice
     implementation 'com.github.JagarYousef:ChatVoicePlayer:1.1.0'
+
+    //Simple mail
+    implementation 'com.sun.mail:android-mail:1.6.6'
+    implementation 'com.sun.mail:android-activation:1.6.7'
 }
 

@@ -61,7 +61,8 @@ public class SignInActivity extends AppCompatActivity {
         });
         binding.textCreateNewAccount.setOnClickListener(view ->
                 startActivity(new Intent(getApplicationContext(), SignUpActivity.class)));
-
+        binding.forgotPassword.setOnClickListener(view ->
+                startActivity(new Intent(getApplicationContext(), ForgotPasswordActivity.class)));
         setShowPasswordListener();
     }
 

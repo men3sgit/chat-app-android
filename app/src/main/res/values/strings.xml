@@ -39,4 +39,12 @@
     <string name="send_images">Send Images</string>
     <string name="send_video">Send Video</string>
     <string name="settings">Settings</string>
+    <string name="please_enter_your_email_address_in_the_field_provided_below">Please enter your email address in the field provided below.</string>
+    <string name="forgot_password">Forgot Password?</string>
+    <string name="done">Done</string>
+    <string name="agree">Agree</string>
+    <string name="back_to_login">Back to Login</string>
+    <string name="forgot_password1">Forgot Password ?</string>
+    <string name="change_password">Change Password</string>
+    <string name="update_password">Update Password</string>
 </resources>
