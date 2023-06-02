@@ -207,6 +207,14 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
         }
         else if(getItemViewType(position) ==  VIEW_TYPE_RECEIVED_IMAGE){
             ((ReceivedImageViewHolder) holder).setData(chatMessages.get(position), receiverProfileImage, application);
+            ((ReceivedImageViewHolder) holder).binding.imageMessage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (onItemClickListener != null) {
+                        onItemClickListener.onItemClick(view, position);
+                    }
+                }
+            });
         }
         else if(getItemViewType(position) ==  VIEW_TYPE_RECEIVED_VIDEO){
             ((ReceivedVideoViewHolder) holder).setData(chatMessages.get(position), receiverProfileImage, application);

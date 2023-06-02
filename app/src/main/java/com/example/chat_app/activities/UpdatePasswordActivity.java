@@ -47,7 +47,6 @@ public class UpdatePasswordActivity extends AppCompatActivity {
                                     && task.getResult().getDocumentChanges().size() > 0) {
                                 DocumentSnapshot documentSnapshot = task.getResult().getDocuments().get(0);
                                 String id = documentSnapshot.getId();
-                                showToast("Code sent to your email!!!");
                                 database.collection(Constants.KEY_COLLECTION_USERS).document(id).update(Constants.KEY_PASSWORD, binding.editNewPassword.getText().toString());
                                 preferenceManager.putBoolean(Constants.KEY_IS_SIGNED_IN, true);
                                 preferenceManager.putString(Constants.KEY_USER_ID, documentSnapshot.getId());
