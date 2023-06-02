@@ -668,7 +668,7 @@ public class ChatActivity extends BaseActivity {
                     .addOnSuccessListener(taskSnapshot -> {
                         // Xử lý khi upload thành công
                         showToast("Send Image success!");
-//                        Log.d(TAG, "Upload success: " + taskSnapshot.getMetadata().getPath());
+                        Log.d(TAG, "Upload success: " + taskSnapshot.getMetadata().getPath());
                         HashMap<String, Object> message = new HashMap<>();
                         message.put(Constants.KEY_SENDER_ID, preferenceManager.getString(Constants.KEY_USER_ID));
                         message.put(Constants.KEY_RECEIVER_ID, receiverUser.id);

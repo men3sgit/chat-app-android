@@ -70,6 +70,8 @@ public class ProfileActivity extends BaseActivity {
 
     private void setListeners() {
         binding.buttonBackToMain.setOnClickListener(view -> finish());
+
+        // xem chi tiet hinh anh
         binding.imageProfile.setOnClickListener(view -> {
             Dialog dialog = new Dialog(ProfileActivity.this);
             dialog.setContentView(R.layout.custom_dialog_image);
@@ -78,6 +80,9 @@ public class ProfileActivity extends BaseActivity {
             imageView.setImageBitmap(bitmap);
             dialog.show();
         });
+
+
+        // su kien nhan nut edit
         binding.buttonEdit.setOnClickListener(view -> {
             if (binding.tableEdit.getVisibility() == View.VISIBLE) {
                 return;
@@ -88,6 +93,8 @@ public class ProfileActivity extends BaseActivity {
             final String birthDate = binding.textBirthDate.getText().toString();
             final String gender = binding.textGender.getText().toString();
             final String phoneNumber = binding.textPhoneNumber.getText().toString();
+
+            //
             binding.editEmail.setText(email);
             binding.editName.setText(name);
             binding.buttonBirthDate.setText(birthDate);
